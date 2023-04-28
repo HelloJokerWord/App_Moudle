@@ -1,14 +1,18 @@
 buildscript {
+    apply from: "config.gradle"
+
     repositories {
         google()
         mavenCentral()
         maven { url "https://jitpack.io" }
+        //noinspection JcenterRepositoryObsolete
+        jcenter()
     }
 
     dependencies {
         classpath 'com.android.tools.build:gradle:7.4.2'
         classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.8.0'
-        classpath 'io.objectbox:objectbox-gradle-plugin:3.5.1'
+        classpath "io.objectbox:objectbox-gradle-plugin:${rootProject.version_object_box}"
 
         //classpath 'com.google.gms:google-services:4.3.15'
     }
@@ -19,6 +23,8 @@ allprojects {
         google()
         mavenCentral()
         maven { url "https://jitpack.io" }
+        //noinspection JcenterRepositoryObsolete
+        jcenter()
     }
 }
 

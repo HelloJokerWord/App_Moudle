@@ -1,0 +1,4 @@
+<resources>
+    <dimen name="refresh_header_height">30dp</dimen>
+    <dimen name="load_more_foot_height">30dp</dimen>
+</resources>

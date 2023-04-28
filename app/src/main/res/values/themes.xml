@@ -1,9 +1,25 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme. -->
-    <style name="Base.Theme.AppMoudle" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your light theme here. -->
-        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
-    </style>
 
-    <style name="Theme.AppMoudle" parent="Base.Theme.AppMoudle" />
+    <!-- APP主题 -->
+    <style name="MainAppTheme" parent="Theme.MaterialComponents.Light.NoActionBar.Bridge">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowIsTranslucent">false</item>
+        <item name="android:forceDarkAllowed" tools:targetApi="q">false</item>
+        <!--虚拟按键上方绘制-->
+        <item name="android:windowDrawsSystemBarBackgrounds">false</item>
+        <item name="android:navigationBarColor">@color/translucent</item>
+        <item name="android:windowTranslucentNavigation">false</item>
+        <item name="windowActionBar">false</item>
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:windowBackground">@drawable/hc_bg_splash_android_12</item>
+        <!--Android12及以上使用-->
+        <item name="android:windowSplashScreenBackground" tools:targetApi="s">@drawable/hc_bg_splash_android_12</item>
+        <item name="android:windowSplashScreenIconBackgroundColor" tools:targetApi="s">@color/translucent</item>
+        <item name="android:windowSplashScreenAnimatedIcon" tools:targetApi="s">@color/translucent</item>
+
+        <!--禁止多点触控-->
+        <item name="android:windowEnableSplitTouch">false</item>
+        <item name="android:splitMotionEvents">false</item>
+    </style>
 </resources>

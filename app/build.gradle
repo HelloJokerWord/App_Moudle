@@ -1,46 +1,148 @@
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
+    id 'kotlin-parcelize'
+    id 'kotlin-kapt'
+    //id 'com.google.gms.google-services'
+
+
 }
 
 android {
-    namespace 'com.example.appmoudle'
-    compileSdk 33
+    namespace "com.example.appmoudle"
+    compileSdk rootProject.compile_sdk_version
+    buildToolsVersion rootProject.build_tools_version
 
     defaultConfig {
-        applicationId "com.example.appmoudle"
-        minSdk 24
-        targetSdk 33
-        versionCode 1
-        versionName "1.0"
+        minSdk rootProject.min_sdk
+        targetSdk rootProject.target_sdk
+        versionCode rootProject.version_code
+        versionName rootProject.version_name
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        multiDexEnabled = true
+
+        ndk {
+            //noinspection ChromeOsAbiSupport
+            abiFilters 'armeabi-v7a', 'arm64-v8a'
+            debugSymbolLevel 'SYMBOL_TABLE'
+        }
+
+        //apk包只加入支持的语言
+        //resConfigs 'zh-rTW', 'zh-rSG', 'zh-rMO', 'zh-rCN', 'ms-rMY', 'zh-rHK'
+
+        flavorDimensions "channel"
+    }
+
+    sourceSets {
+        main {
+            jniLibs.srcDirs = ['libs']
+            assets.srcDirs = ['assets', 'src/main/assets']
+        }
+    }
+
+    signingConfigs {
+        signingPublish {
+            storeFile file("${project.projectDir.absolutePath}" + "${rootProject.releaseStoreFile}")
+            keyAlias "${rootProject.releaseKeyAlias}"
+            storePassword "${rootProject.releaseStorePassword}"
+            keyPassword "${rootProject.releaseKeyPassword}"
+            v1SigningEnabled true
+            v2SigningEnabled true
+        }
+
+        signingTest {
+            storeFile file("${project.projectDir.absolutePath}" + "${rootProject.debugStoreFile}")
+            keyAlias "${rootProject.debugKeyAlias}"
+            storePassword "${rootProject.debugStorePassword}"
+            keyPassword "${rootProject.debugKeyPassword}"
+            v1SigningEnabled true
+            v2SigningEnabled true
+        }
+    }
+
+    productFlavors {
+        publish {
+            signingConfig signingConfigs.signingPublish
+            applicationId rootProject.application_id
+            resValue("string", "app_name", rootProject.app_name)
+
+            buildConfigField "Boolean", "isPublish", "true"
+        }
+
+        develop {
+            signingConfig signingConfigs.signingTest
+            applicationId rootProject.application_id_dev
+            resValue "string", "app_name", "${rootProject.app_name}-Test"
+
+            buildConfigField "Boolean", "isPublish", "false"
+        }
     }
 
     buildTypes {
+        debug {
+            signingConfig null
+        }
         release {
-            minifyEnabled false
+            signingConfig null
+            debuggable = false
+            jniDebuggable false
+            renderscriptDebuggable false
+            renderscriptOptimLevel 3
+            // 混淆
+            minifyEnabled true
+            // Zipalign优化
+            zipAlignEnabled true
+            // 移除无用的resource文件
+            shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+
+    buildFeatures {
+        viewBinding true
     }
+
+    lint {
+        abortOnError false
+        checkReleaseBuilds false
+    }
+
+    android.applicationVariants.all { variant ->
+        variant.outputs.all { output ->
+            def buildTime = new Date().format('yyMMddHHmm')
+            outputFileName = "${rootProject.app_name}-${variant.flavorName}-${variant.buildType.name}-v${versionName}-${buildTime}.apk"
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
+    }
+
     kotlinOptions {
-        jvmTarget = '1.8'
+        jvmTarget = '11'
     }
 }
 
 dependencies {
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
 
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
 
-    implementation "androidx.core:core-ktx:$version_ktx"
-    implementation "androidx.appcompat:appcompat:$version_appcompat"
-    implementation "androidx.constraintlayout:constraintlayout:$version_constraintlayout"
+    implementation(project(":LibCommon"))
+    implementation(project(":LibFragmention"))
 
-    implementation "om.google.android.material:material:$version_material"
+    //objectBox数据库 https://docs.objectbox.io/getting-started
+    debugImplementation "io.objectbox:objectbox-android-objectbrowser:${rootProject.version_object_box}"
+    releaseImplementation "io.objectbox:objectbox-android:${rootProject.version_object_box}"
+    implementation "io.objectbox:objectbox-kotlin:${rootProject.version_object_box}"
+
+    //debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.10'
+
 }
+
+apply plugin: "io.objectbox"  // Apply last.

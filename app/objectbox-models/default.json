@@ -1,0 +1,64 @@
+{
+  "_note1": "KEEP THIS FILE! Check it into a version control system (VCS) like git.",
+  "_note2": "ObjectBox manages crucial IDs for your object model. See docs for details.",
+  "_note3": "If you have VCS merge conflicts, you must resolve them according to ObjectBox docs.",
+  "entities": [
+    {
+      "id": "1:752284950545303302",
+      "lastPropertyId": "7:1388104940917268601",
+      "name": "TraceDBEntity",
+      "properties": [
+        {
+          "id": "1:6621303742775874657",
+          "name": "id",
+          "type": 6,
+          "flags": 129
+        },
+        {
+          "id": "2:3818485301405360070",
+          "name": "unique",
+          "indexId": "1:4610925796050603354",
+          "type": 9,
+          "flags": 34848
+        },
+        {
+          "id": "3:3132193844553797625",
+          "name": "eid",
+          "type": 9
+        },
+        {
+          "id": "4:2454087053750711384",
+          "name": "timestamp",
+          "type": 6
+        },
+        {
+          "id": "5:1200501769544748297",
+          "name": "payload",
+          "type": 9
+        },
+        {
+          "id": "6:2412900981193037113",
+          "name": "dataType",
+          "type": 9
+        },
+        {
+          "id": "7:1388104940917268601",
+          "name": "timeNow",
+          "type": 9
+        }
+      ],
+      "relations": []
+    }
+  ],
+  "lastEntityId": "1:752284950545303302",
+  "lastIndexId": "1:4610925796050603354",
+  "lastRelationId": "0:0",
+  "lastSequenceId": "0:0",
+  "modelVersion": 5,
+  "modelVersionParserMinimum": 5,
+  "retiredEntityUids": [],
+  "retiredIndexUids": [],
+  "retiredPropertyUids": [],
+  "retiredRelationUids": [],
+  "version": 1
+}

@@ -1,0 +1,93 @@
+plugins {
+    id 'com.android.library'
+    id 'org.jetbrains.kotlin.android'
+    id 'kotlin-kapt'
+}
+
+android {
+    namespace 'com.third.libcommon'
+    compileSdk rootProject.compile_sdk_version
+    buildToolsVersion rootProject.build_tools_version
+
+    defaultConfig {
+        minSdk rootProject.min_sdk
+        targetSdk rootProject.target_sdk
+
+        consumerProguardFiles "consumer-rules.pro"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
+    }
+
+    kotlinOptions {
+        jvmTarget = '11'
+    }
+}
+
+dependencies {
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+
+    api "androidx.core:core-ktx:${rootProject.version_ktx}"
+    api "androidx.appcompat:appcompat:${rootProject.version_appcompat}"
+    api "androidx.constraintlayout:constraintlayout:${rootProject.version_constraintlayout}"
+    api "androidx.fragment:fragment-ktx:${rootProject.version_fragment}"
+    api "androidx.lifecycle:lifecycle-livedata-ktx:${rootProject.version_lifecycle}"
+    api "androidx.lifecycle:lifecycle-viewmodel-ktx:${rootProject.version_lifecycle}"
+    api "androidx.viewpager2:viewpager2:${rootProject.version_viewpager2}"
+    api "androidx.recyclerview:recyclerview:${rootProject.version_recyclerview}"
+    api "androidx.multidex:multidex:${rootProject.version_multidex}"
+
+    api "com.google.android.material:material:${rootProject.version_material}"
+    api "com.google.code.gson:gson:${rootProject.version_gson}"
+
+    //Android常用工具 https://github.com/Blankj/AndroidUtilCode/blob/master/lib/utilcode/README-CN.md
+    api "com.blankj:utilcodex:1.31.1"
+
+    //启动组件 https://github.com/idisfkj/android-startup/blob/master/README-ch.md
+    api "io.github.idisfkj:android-startup:1.1.0"
+
+    //腾讯数据存储 https://github.com/Tencent/MMKV/blob/master/README_CN.md
+    api "com.tencent:mmkv:1.2.14"
+
+    //状态栏 导航栏沉浸式工具 https://github.com/gyf-dev/ImmersionBar
+    api "com.geyifeng.immersionbar:immersionbar:3.2.2"
+
+    //消息发送机制 https://github.com/JeremyLiao/LiveEventBus
+    api "io.github.jeremyliao:live-event-bus-x:1.8.0"
+
+    //svga播放器 https://github.com/svga/SVGAPlayer-Android
+    api "com.github.yyued:SVGAPlayer-Android:2.6.1"
+
+    //防抖动点击 https://github.com/TaylorKunZhang/single-click
+    api "cc.taylorzhang:single-click:1.1.0"
+
+    //recycleView适配器 https://github.com/CymChad/BaseRecyclerViewAdapterHelper/blob/master/readme/0-BaseRecyclerViewAdapterHelper.md
+    api "com.github.CymChad:BaseRecyclerViewAdapterHelper:3.0.11"
+
+    //刷新加载 https://github.com/scwang90/SmartRefreshLayout
+    api "io.github.scwang90:refresh-layout-kernel:2.0.6"
+
+    //弹窗库 https://github.com/li-xiaojun/XPopup/wiki/3.-%E8%87%AA%E5%AE%9A%E4%B9%89%E5%BC%B9%E7%AA%97
+    api "com.github.li-xiaojun:XPopup:2.9.19"
+
+    //UI状态库 https://github.com/nukc/StateView
+    api "com.github.nukc:StateView:v3.0.2"
+
+    //shape绘制库 https://github.com/JavaNoober/BackgroundLibrary/wiki
+    api "com.github.JavaNoober.BackgroundLibrary:libraryx:1.7.6"
+
+    //今日头条屏幕适配 https://github.com/JessYanCoding/AndroidAutoSize
+    api "com.github.JessYanCoding:AndroidAutoSize:v1.2.1"
+
+    //luban图片压缩 https://github.com/Curzibn/Luban/tree/turbo
+    api "top.zibin:Luban-turbo:1.0.0"
+}

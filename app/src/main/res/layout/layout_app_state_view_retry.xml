@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/layoutRetry"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:id="@+id/ivError"
+        android:layout_width="144dp"
+        android:layout_height="144dp"
+        android:src="@mipmap/ic_launcher"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.4" />
+
+    <ImageView
+        android:id="@+id/ivRefresh"
+        android:layout_width="12dp"
+        android:layout_height="12dp"
+        android:layout_marginTop="20dp"
+        android:src="@mipmap/ic_launcher"
+        app:layout_constraintEnd_toStartOf="@id/tvError"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintStart_toStartOf="@id/ivError"
+        app:layout_constraintTop_toBottomOf="@id/ivError" />
+
+    <TextView
+        android:id="@+id/tvError"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="6dp"
+        android:text="@string/hc_net_error_retry"
+        android:textColor="@color/color_black"
+        android:textSize="12dp"
+        app:layout_constraintBottom_toBottomOf="@id/ivRefresh"
+        app:layout_constraintEnd_toEndOf="@id/ivError"
+        app:layout_constraintStart_toEndOf="@id/ivRefresh"
+        app:layout_constraintTop_toTopOf="@id/ivRefresh" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

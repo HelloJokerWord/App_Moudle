@@ -1,2 +1,4 @@
 rootProject.name = "AppMoudle"
 include ':app'
+include ':LibCommon'
+include ':LibFragmention'

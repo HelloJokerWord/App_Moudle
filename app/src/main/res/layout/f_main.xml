@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/color_white">
+
+    <FrameLayout
+        android:id="@+id/flMain"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@id/viewBottom"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <View
+        android:id="@+id/viewBottom"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/color_white"
+        app:layout_constraintTop_toTopOf="@id/viewBottom" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/clHome"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="-50dp"
+        app:layout_constraintBottom_toTopOf="@id/viewBottom"
+        app:layout_constraintEnd_toStartOf="@id/clParty"
+        app:layout_constraintHorizontal_chainStyle="spread_inside"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <ImageView
+            android:id="@+id/ivTabHome"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@mipmap/ic_launcher"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tvTabHome"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/hc_word_confirm"
+            android:textColor="@color/color_white"
+            android:textSize="10dp"
+            app:layout_constraintEnd_toEndOf="@id/ivTabHome"
+            app:layout_constraintStart_toStartOf="@id/ivTabHome"
+            app:layout_constraintTop_toBottomOf="@id/ivTabHome" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/clParty"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="@id/clHome"
+        app:layout_constraintEnd_toStartOf="@id/clChat"
+        app:layout_constraintStart_toEndOf="@id/clHome">
+
+        <ImageView
+            android:id="@+id/ivTabParty"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@mipmap/ic_launcher"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tvTabParty"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/hc_word_confirm"
+            android:textColor="@color/color_white"
+            android:textSize="10dp"
+            app:layout_constraintEnd_toEndOf="@id/ivTabParty"
+            app:layout_constraintStart_toStartOf="@id/ivTabParty"
+            app:layout_constraintTop_toBottomOf="@id/ivTabParty" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/clChat"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="@id/clHome"
+        app:layout_constraintEnd_toStartOf="@id/clMe"
+        app:layout_constraintStart_toEndOf="@id/clParty">
+
+        <ImageView
+            android:id="@+id/ivTabChat"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@mipmap/ic_launcher"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tvTabChat"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/hc_word_confirm"
+            android:textColor="@color/color_white"
+            android:textSize="10dp"
+            app:layout_constraintEnd_toEndOf="@id/ivTabChat"
+            app:layout_constraintStart_toStartOf="@id/ivTabChat"
+            app:layout_constraintTop_toBottomOf="@id/ivTabChat" />
+
+        <TextView
+            android:id="@+id/tvMsgCount"
+            android:layout_width="14dp"
+            android:layout_height="14dp"
+            android:background="@color/color_white"
+            android:gravity="center"
+            android:textColor="@color/color_white"
+            android:textSize="8dp"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="@id/ivTabChat"
+            app:layout_constraintTop_toTopOf="@id/ivTabChat"
+            tools:text="11"
+            tools:visibility="visible" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/clMe"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="@id/clHome"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/clChat">
+
+        <ImageView
+            android:id="@+id/ivTabMe"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@mipmap/ic_launcher"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tvTabMe"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/hc_word_confirm"
+            android:textColor="@color/color_white"
+            android:textSize="10dp"
+            app:layout_constraintEnd_toEndOf="@id/ivTabMe"
+            app:layout_constraintStart_toStartOf="@id/ivTabMe"
+            app:layout_constraintTop_toBottomOf="@id/ivTabMe" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,3 +1,9 @@
 <resources>
-    <string name="app_name">AppMoudle</string>
+
+    <string name="hc_word_cancel">Cancel</string>
+    <string name="hc_word_confirm">Confirm</string>
+    <string name="hc_default_permission_denied_forever_warning">To access your permission, go to System Settings</string>
+    <string name="hc_exit_app_one_more_time">press more time and leave </string>
+    <string name="hc_net_no_content">Content not found</string>
+    <string name="hc_net_error_retry">Refresh the page</string>
 </resources>

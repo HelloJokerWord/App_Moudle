@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="CodeEditView">
+        <attr name="textColor" format="color"/>
+        <attr name="textSize" format="integer"/>
+        <attr name="borderSize" format="integer"/>
+        <attr name="borderMargin" format="integer"/>
+        <attr name="borderNum" format="integer"/>
+    </declare-styleable>
+
+    <declare-styleable name="HCCircleProgressView">
+        <attr name="hc_progressWidth" format="dimension" />
+        <attr name="hc_progressColor" format="color" />
+        <attr name="hc_backgroundColor" format="color" />
+        <attr name="hc_startAngle" format="integer" />
+        <attr name="hc_endAngle" format="integer" />
+        <attr name="hc_animation" format="boolean" />
+        <attr name="hc_duration" format="integer" />
+    </declare-styleable>
+
+    <declare-styleable name="StrokedTextView">
+        <attr name="StrokeColor" format="color" />
+        <attr name="StrokeWidth" format="float" />
+        <attr name="strokeTextColor" format="color" />
+        <attr name="textWidth" format="float" />
+    </declare-styleable>
+
+    <!--边沿透明View-->
+    <declare-styleable name="EdgeTransparentView">
+        <attr name="edge_position">
+            <flag name="top" value="0x01" />
+            <flag name="bottom" value="0x02" />
+            <flag name="left" value="0x04" />
+            <flag name="right" value="0x08" />
+        </attr>
+
+        <attr name="edge_width" format="dimension" />
+    </declare-styleable>
+
+</resources>
