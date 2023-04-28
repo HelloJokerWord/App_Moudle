@@ -90,4 +90,7 @@ dependencies {
 
     //luban图片压缩 https://github.com/Curzibn/Luban/tree/turbo
     api "top.zibin:Luban-turbo:1.0.0"
+
+    //banner滚动 https://github.com/youth5201314/banner
+    api "io.github.youth5201314:banner:2.2.2"
 }
