@@ -24,6 +24,7 @@ ext {
     version_multidex = "2.0.1"
     version_gson = "2.10.1"
     version_object_box = "3.5.1"
+    version_rxjava = "3.1.6"
 
     //签名密钥
     releaseStoreFile = "/keystore/TestDebug.jks"

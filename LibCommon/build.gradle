@@ -91,7 +91,7 @@ dependencies {
     //图片下载显示
     def glideVersion = "4.15.1"
     api "com.github.bumptech.glide:glide:$glideVersion"
-    annotationProcessor "com.github.bumptech.glide:compiler:$glideVersion"
+    kapt "com.github.bumptech.glide:compiler:$glideVersion"
     api 'jp.wasabeef:glide-transformations:4.3.0'
 
     //图片选择器 https://github.com/LuckSiege/PictureSelector/blob/version_component/README_CN.md
@@ -105,4 +105,25 @@ dependencies {
 
     //banner滚动 https://github.com/youth5201314/banner
     api "io.github.youth5201314:banner:2.2.2"
+
+    //rxjava
+    api "io.reactivex.rxjava3:rxjava:$version_rxjava"
+    api 'io.reactivex.rxjava3:rxandroid:3.0.2'
+    api 'com.github.liujingxing.rxlife:rxlife-rxjava3:2.2.2' //管理RxJava3生命周期，页面销毁，关闭请求
+
+    //网络请求 https://github.com/liujingxing/rxhttp/blob/master/README_zh.md
+    def rxhttp_version = '3.0.3'
+    api 'com.squareup.okhttp3:okhttp:4.10.0'
+    api "com.github.liujingxing.rxhttp:rxhttp:$rxhttp_version"
+    kapt "com.github.liujingxing.rxhttp:rxhttp-compiler:$rxhttp_version"
+}
+
+/**
+ * 网络请求库需要添加
+ */
+kapt {
+    arguments {
+        //依赖了RxJava时，rxhttp_rxjava参数为必须，传入RxJava版本号
+        arg("rxhttp_rxjava", "$version_rxjava")
+    }
 }
