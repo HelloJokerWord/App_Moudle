@@ -1,13 +1,12 @@
-package com.example.appmoudle.manager
+package com.third.libcommon
 
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.app.AlertDialog
 import android.content.Context
 import com.blankj.utilcode.constant.PermissionConstants
 import com.blankj.utilcode.util.PermissionUtils
-import com.blankj.utilcode.util.StringUtils
-import com.example.appmoudle.R
-import com.example.appmoudle.dialog.AppConfirmPopup
+
 
 /**
  * 作者: Joker
@@ -94,14 +93,16 @@ object PermissionManager {
 
     /** 显示默认的权限被永远拒绝的提示 */
     private fun showDeniedForeverTip(context: Context) {
-        AppConfirmPopup.Builder(context)
-            .setContent(StringUtils.getString(R.string.hc_default_permission_denied_forever_warning))
-            .setSubmitText(StringUtils.getString(R.string.hc_word_confirm))
-            .setCancelText(StringUtils.getString(R.string.hc_word_cancel))
-            .setOnClickSubmitListener {
+        val builder = AlertDialog.Builder(context)
+        builder.setTitle("Tips")
+            .setMessage("To access your permission, go to System Settings")
+            .setPositiveButton("Confirm") { _, _ ->
                 PermissionUtils.launchAppDetailsSettings()
             }
-            .build()
+            .setNegativeButton("Cancel") { dialog, _ ->
+                dialog.dismiss()
+            }
+            .setCancelable(false)
             .show()
     }
 

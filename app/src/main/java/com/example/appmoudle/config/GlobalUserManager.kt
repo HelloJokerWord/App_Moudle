@@ -7,7 +7,7 @@ package com.example.appmoudle.config
  * Des:登陆信息 和 管理
  */
 
-object HCUserManager {
+object GlobalUserManager {
     private const val TAG = "HCUserManager"
 
     /**

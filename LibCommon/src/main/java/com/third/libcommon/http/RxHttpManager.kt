@@ -7,4 +7,8 @@ package com.third.libcommon.http
  */
 object RxHttpManager {
 
+    fun init() {
+
+    }
+
 }

@@ -10,6 +10,7 @@ import com.blankj.utilcode.util.ReflectUtils
 import com.example.appmoudle.R
 import com.example.appmoudle.databinding.LayoutAppStateViewLoadingBinding
 import com.github.nukc.stateview.StateView
+import com.third.libcommon.SvgaManager
 
 @SuppressLint("NonConstantResourceId")
 class StateViewManager private constructor(private val mStateView: StateView) {

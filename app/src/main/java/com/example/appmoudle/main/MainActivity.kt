@@ -15,12 +15,12 @@ import com.example.appmoudle.R
 import com.example.appmoudle.base.BaseSupportActivity
 import com.example.appmoudle.config.EventKeyBoardChange
 import com.example.appmoudle.config.EventNetWorkChange
-import com.example.appmoudle.config.HCUserManager
+import com.example.appmoudle.config.GlobalUserManager
 import com.example.appmoudle.config.MMKVKeys
 import com.example.appmoudle.databinding.ActivityMainBinding
 import com.example.appmoudle.dialog.AppConfirmPopup
 import com.example.appmoudle.login.LoginF
-import com.example.appmoudle.manager.PermissionManager
+import com.third.libcommon.PermissionManager
 import com.lxj.xpopup.core.BasePopupView
 import com.third.libcommon.LiveEventManager
 import com.third.libcommon.MMKVManager
@@ -123,7 +123,7 @@ class MainActivity : BaseSupportActivity<ActivityMainBinding>() {
     private fun checkAppPermission() {
         // 版本大于6.0动态申请权限
         PermissionManager.checkStoragePermission(this, {
-            loadRootFragment(R.id.flContainerView, if (HCUserManager.isLogin()) MainF.newInstance() else LoginF.newInstance())
+            loadRootFragment(R.id.flContainerView, if (GlobalUserManager.isLogin()) MainF.newInstance() else LoginF.newInstance())
         }, { _, _, _ -> showSettingDialog() })
     }
 

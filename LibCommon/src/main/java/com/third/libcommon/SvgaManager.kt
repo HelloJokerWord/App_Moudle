@@ -1,4 +1,4 @@
-package com.example.appmoudle.manager
+package com.third.libcommon
 
 import android.content.Context
 import android.util.Log
@@ -6,7 +6,6 @@ import android.view.View
 import androidx.core.view.isVisible
 import com.blankj.utilcode.util.EncryptUtils
 import com.blankj.utilcode.util.FileUtils
-import com.example.appmoudle.BuildConfig
 import com.opensource.svgaplayer.SVGADrawable
 import com.opensource.svgaplayer.SVGAImageView
 import com.opensource.svgaplayer.SVGAParser

@@ -8,7 +8,7 @@ import com.blankj.utilcode.util.DeviceUtils
  * Des: app常量池 供全应用业务会用到的常量
  */
 
-object HCConstant {
+object GlobalConstant {
 
     /**
      * google登陆返回

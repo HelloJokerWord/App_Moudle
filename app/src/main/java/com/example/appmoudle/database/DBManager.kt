@@ -2,7 +2,7 @@ package com.example.appmoudle.database
 
 import android.util.Log
 import com.blankj.utilcode.util.Utils
-import com.example.appmoudle.config.HCPath
+import com.example.appmoudle.config.GlobalPath
 import com.example.appmoudle.database.base.BaseDBEntity
 import com.example.appmoudle.database.entity.MyObjectBox
 import com.example.appmoudle.manager.LogSwitchManager
@@ -50,7 +50,7 @@ object DBManager {
     private fun createDatabase(): BoxStore {
         return MyObjectBox.builder()
             .androidContext(Utils.getApp())
-            .directory(File(HCPath.createMainDBPath()))
+            .directory(File(GlobalPath.createMainDBPath()))
             .maxSizeInKByte(1024 * 1024 * 5L) //数据库大小扩增为5G
             .let { objectBoxBuilder ->
                 try {

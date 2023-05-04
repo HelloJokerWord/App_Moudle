@@ -1,5 +1,6 @@
 package com.example.appmoudle.config
 
+import com.blankj.utilcode.util.FileUtils
 import com.blankj.utilcode.util.PathUtils
 
 /**
@@ -8,7 +9,7 @@ import com.blankj.utilcode.util.PathUtils
  * Des: 全应用本地磁盘使用路径
  */
 
-object HCPath {
+object GlobalPath {
 
     /**
      * 根路径
@@ -21,6 +22,14 @@ object HCPath {
      * 创建主数据库文件路径
      */
     fun createMainDBPath() = "${PathUtils.getInternalAppDbsPath()}/objectbox/db_version_$DATA_BASE_VERSION"
+
+    /**
+     * 获取图片压缩路径
+     */
+    fun getImageCompressPath(): String {
+        if (!FileUtils.isFileExists(IMAGE_CACHE)) FileUtils.createOrExistsFile(IMAGE_CACHE)
+        return IMAGE_CACHE
+    }
 
     /**
      * http缓存路径
@@ -60,16 +69,11 @@ object HCPath {
     /**
      * 拍照输出
      */
-    val CAMERA_OUT_PUT = "$ROOT_PATH/camerax/"
+    val CAMERA_OUT_PUT = "$ROOT_PATH/take_photo/"
 
     /**
      * 裁剪输出
      */
     val CROP_OUT_PUT = "$ROOT_PATH/crop/"
-
-    /**
-     * 头像框svga文件地址
-     */
-    val WEAR_AVATAR_SVGA = "$ROOT_PATH/wear_avatar/"
 
 }

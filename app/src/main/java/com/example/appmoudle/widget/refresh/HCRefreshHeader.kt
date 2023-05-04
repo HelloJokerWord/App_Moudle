@@ -7,7 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.widget.FrameLayout
 import com.example.appmoudle.R
-import com.example.appmoudle.manager.SvgaManager
+import com.third.libcommon.SvgaManager
 import com.opensource.svgaplayer.SVGAImageView
 import com.scwang.smart.refresh.layout.api.RefreshHeader
 import com.scwang.smart.refresh.layout.api.RefreshKernel

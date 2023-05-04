@@ -9,10 +9,11 @@ import com.blankj.utilcode.util.ToastUtils
 import com.blankj.utilcode.util.Utils
 import com.example.appmoudle.R
 import com.example.appmoudle.database.DBManager
-import com.example.appmoudle.manager.SvgaManager
+import com.third.libcommon.SvgaManager
 import com.rousetime.android_startup.AndroidStartup
 import com.third.libcommon.LiveEventManager
 import com.third.libcommon.MMKVManager
+import com.weikaiyun.fragmentation.FragmentationManager
 
 /**
  * CreateBy:Joker
@@ -51,6 +52,9 @@ class CommonStartup : AndroidStartup<String>() {
 
         //数据库初始化
         DBManager.init()
+
+        //初始化fragment管理工具
+        FragmentationManager.init()
         return this.javaClass.name
     }
 
