@@ -13,6 +13,10 @@ object MMKVKeys {
      */
     const val LOGIN_INFO = "LOGIN_INFO"
 
+    /**
+     * 键盘高度
+     */
+    const val KEYBOARD_HIGH = "KEYBOARD_HIGH"
 
 
 }
