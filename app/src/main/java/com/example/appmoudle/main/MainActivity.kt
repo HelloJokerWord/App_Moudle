@@ -153,7 +153,8 @@ class MainActivity : BaseSupportActivity<ActivityMainBinding>() {
             .setOnClickSubmitListener {
                 PermissionManager.isJumpFromSettingPage = true
                 PermissionUtils.launchAppDetailsSettings()
-            }.setOnClickCancelListener { finish() }
+            }
+            .setOnClickCancelListener { finish() }
             .build()
             .show()
     }
@@ -183,7 +184,6 @@ class MainActivity : BaseSupportActivity<ActivityMainBinding>() {
 
 
     private fun initResDownload() {
-
 
     }
 }

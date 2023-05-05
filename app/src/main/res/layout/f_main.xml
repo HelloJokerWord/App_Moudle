@@ -164,4 +164,13 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
+    <TextView
+        android:id="@+id/tvContent"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:textColor="@color/color_black"
+        android:text="111"/>
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>

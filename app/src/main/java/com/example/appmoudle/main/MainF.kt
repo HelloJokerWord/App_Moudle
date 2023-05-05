@@ -5,8 +5,16 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.ImageView
+import androidx.lifecycle.lifecycleScope
+import com.blankj.utilcode.util.FileUtils
 import com.example.appmoudle.base.BaseSupportFragment
+import com.example.appmoudle.config.GlobalPath
 import com.example.appmoudle.databinding.FMainBinding
+import com.orhanobut.logger.Logger
+import com.third.libcommon.log.LoggerManager
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 
 /**

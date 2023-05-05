@@ -38,7 +38,7 @@ object ProgressManager {
                 val request = chain.request()
                 val response = chain.proceed(request)
                 response.newBuilder()
-                    .body(response.body()?.let { ProgressResponseBody(request.url().toString(), LISTENER, it) })
+                    .body(response.body?.let { ProgressResponseBody(request.url.toString(), LISTENER, it) })
                     .build()
             }
                 .sslSocketFactory(SSLSocketClient.sSLSocketFactory, SSLSocketClient.geX509tTrustManager())

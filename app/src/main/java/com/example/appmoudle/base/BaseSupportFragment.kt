@@ -1,13 +1,13 @@
 package com.example.appmoudle.base
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
 import androidx.viewbinding.ViewBinding
 import com.gyf.immersionbar.ImmersionBar
+import com.orhanobut.logger.Logger
 
 abstract class BaseSupportFragment<VB : ViewBinding> : BaseFragment() {
 
@@ -20,10 +20,10 @@ abstract class BaseSupportFragment<VB : ViewBinding> : BaseFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        Log.d(TAG, "$TAG onViewCreated")
+        Logger.d( "$TAG onViewCreated")
         if (isNeedPaddingTop()) {
             val statusBarHigh = ImmersionBar.getStatusBarHeight(this)
-            Log.i(TAG, "statusBarHigh=$statusBarHigh")
+            Logger.i( "statusBarHigh=$statusBarHigh")
             getStatusPaddingView()?.setPadding(0, statusBarHigh, 0, 0)
         }
     }
