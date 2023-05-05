@@ -116,6 +116,8 @@ dependencies {
     api 'com.squareup.okhttp3:okhttp:4.10.0'
     api "com.github.liujingxing.rxhttp:rxhttp:$rxhttp_version"
     kapt "com.github.liujingxing.rxhttp:rxhttp-compiler:$rxhttp_version"
+
+
 }
 
 /**
