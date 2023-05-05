@@ -17,4 +17,6 @@ object URLApi {
     @DefaultDomain //设置为默认域名
     var baseUrl = if (BuildConfig.DEBUG) BASE_URL_DEV else BASE_URL_PROD
 
+    const val UPLOAD_URL = "https://upload.happychathk.com"
+
 }

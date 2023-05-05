@@ -13,6 +13,7 @@ import com.third.libcommon.SvgaManager
 import com.rousetime.android_startup.AndroidStartup
 import com.third.libcommon.LiveEventManager
 import com.third.libcommon.MMKVManager
+import com.third.libcommon.http.HttpManager
 import com.weikaiyun.fragmentation.FragmentationManager
 
 /**
@@ -55,6 +56,9 @@ class CommonStartup : AndroidStartup<String>() {
 
         //初始化fragment管理工具
         FragmentationManager.init()
+
+        //网络请求配置初始化
+        HttpManager.init()
         return this.javaClass.name
     }
 
