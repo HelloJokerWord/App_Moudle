@@ -12,6 +12,7 @@ import com.example.appmoudle.base.BaseSupportFragment
 import com.example.appmoudle.config.GlobalPath
 import com.example.appmoudle.databinding.FMainBinding
 import com.example.appmoudle.dialog.CommonBottomWebDialog
+import com.example.appmoudle.manager.photo.PhotosManager
 import com.orhanobut.logger.Logger
 import com.third.libcommon.log.LoggerManager
 import kotlinx.coroutines.Dispatchers
@@ -69,7 +70,9 @@ class MainF : BaseSupportFragment<FMainBinding>() {
         //默认显示第一页
         showHome()
 
-        CommonBottomWebDialog.show(this,"https://www.baidu.com")
+        PhotosManager.openAlbum(activity){
+
+        }
     }
 
     /**

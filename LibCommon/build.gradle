@@ -96,6 +96,7 @@ dependencies {
 
     //图片选择器 https://github.com/LuckSiege/PictureSelector/blob/version_component/README_CN.md
     def picVision = "v3.10.7"
+    //noinspection GradleDependency
     api "io.github.lucksiege:pictureselector:$picVision"
     api "io.github.lucksiege:ucrop:$picVision"      //图片裁剪
     api "io.github.lucksiege:camerax:$picVision"    //自定义相机
@@ -113,6 +114,7 @@ dependencies {
 
     //网络请求 https://github.com/liujingxing/rxhttp/blob/master/README_zh.md
     def rxhttp_version = '3.0.3'
+    //noinspection GradleDependency
     api 'com.squareup.okhttp3:okhttp:4.10.0'
     api "com.github.liujingxing.rxhttp:rxhttp:$rxhttp_version"
     kapt "com.github.liujingxing.rxhttp:rxhttp-compiler:$rxhttp_version"
