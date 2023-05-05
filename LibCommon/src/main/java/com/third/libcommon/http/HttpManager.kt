@@ -2,13 +2,17 @@ package com.third.libcommon.http
 
 import android.util.Log
 import androidx.lifecycle.LifecycleOwner
+import com.blankj.utilcode.constant.TimeConstants
 import com.blankj.utilcode.util.AppUtils
 import com.blankj.utilcode.util.DeviceUtils
 import com.blankj.utilcode.util.LanguageUtils
+import com.blankj.utilcode.util.PathUtils
 import com.rxjava.rxlife.lifeOnMain
 import com.third.libcommon.BuildConfig
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import okhttp3.OkHttpClient
 import rxhttp.RxHttpPlugins
+import rxhttp.wrapper.cache.CacheMode
 import rxhttp.wrapper.exception.ParseException
 import rxhttp.wrapper.param.RxHttp
 import rxhttp.wrapper.param.toObservableResponseData
@@ -30,6 +34,10 @@ object HttpManager {
     const val TAG = "HttpManager"
     private val mapCommonParams = mutableMapOf<String, Any?>()
 
+    private val CACHE_PATH = "${PathUtils.getInternalAppCachePath()}/RxHttpCache"
+    private const val CACHE_SIZE = 10L * 1024 * 1024
+    private const val CACHE_TIME = 1L * TimeConstants.HOUR
+
     fun init() {
         //证书配置，可以访问所有 具体：https://github.com/liujingxing/rxhttp/wiki/%E5%85%B3%E4%BA%8EHttps
         val sslParams = HttpsUtils.getSslSocketFactory()
@@ -47,7 +55,7 @@ object HttpManager {
 
         RxHttpPlugins.init(clientLocal)                                       //自定义OkHttpClient对象
             .setDebug(BuildConfig.DEBUG, true, 2)      //是否开启调试模式，开启后，logcat过滤RxHttp，即可看到整个请求流程日志
-            //.setCache(cacheFile, 1000 * 100, CacheMode.REQUEST_NETWORK_FAILED_READ_CACHE)
+            .setCache(File(CACHE_PATH), CACHE_SIZE, CacheMode.REQUEST_NETWORK_FAILED_READ_CACHE, CACHE_TIME)
             //.setExcludeCacheKeys("time")                                    //设置一些key，不参与cacheKey的组拼
             //.setResultDecoder(s -> s)                                       //设置数据解密/解码器，非必须
             .setOnParamAssembly {                                             //设置公共参数，非必须
@@ -76,6 +84,15 @@ object HttpManager {
             .toObservableResponseData<T>()
             .lifeOnMain(owner)
             .subscribe({ data -> reqResult?.onSuccess(data) }, { error -> onFail(error, reqResult) })
+    }
+
+    /**
+     * get请求同步
+     */
+    inline fun <reified T> getSync(url: String, map: MutableMap<String, Any?>? = null, classType: Class<T>): T? {
+        return RxHttp.get(url)
+            .addAll(map ?: mutableMapOf<String, Any?>())
+            .executeClass(classType)
     }
 
     /**

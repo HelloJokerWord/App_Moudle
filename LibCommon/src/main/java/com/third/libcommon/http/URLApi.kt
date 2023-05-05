@@ -19,4 +19,5 @@ object URLApi {
 
     const val UPLOAD_URL = "https://upload.happychathk.com"
 
+    const val URL_GOOGLE_LOGIN = "/user/login"
 }
