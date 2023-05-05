@@ -64,7 +64,7 @@ object GlobalPath {
     /**
      * 录音缓存位置
      */
-    val RECORD_FILE = "$ROOT_PATH/record/"
+    val WEAR_AVATAR_SVGA = "$ROOT_PATH/svga/"
 
     /**
      * 拍照输出

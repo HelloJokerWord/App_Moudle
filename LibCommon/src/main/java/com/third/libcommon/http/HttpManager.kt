@@ -169,7 +169,7 @@ object HttpManager {
      * @param destPath a/b/c.apk
      * @param isAppend 是否断点下载
      */
-    fun downFile(owner: LifecycleOwner, url: String, destPath: String, isAppend: Boolean = false, progressListener: ProgressListener? = null, reqResult: RequestCallBack<String>? = null) {
+    fun downloadFile(owner: LifecycleOwner, url: String, destPath: String, isAppend: Boolean = false, progressListener: ProgressListener? = null, reqResult: RequestCallBack<String>? = null) {
         RxHttp.get(url)
             .toDownloadObservable(destPath, isAppend)
             .onMainProgress {
