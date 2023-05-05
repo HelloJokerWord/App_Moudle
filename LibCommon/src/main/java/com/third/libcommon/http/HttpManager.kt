@@ -9,7 +9,6 @@ import com.blankj.utilcode.util.LanguageUtils
 import com.blankj.utilcode.util.PathUtils
 import com.rxjava.rxlife.lifeOnMain
 import com.third.libcommon.BuildConfig
-import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import okhttp3.OkHttpClient
 import rxhttp.RxHttpPlugins
 import rxhttp.wrapper.cache.CacheMode
@@ -28,12 +27,20 @@ import javax.net.ssl.SSLSession
  */
 object HttpManager {
 
+    /**
+     * http请求超时配置
+     */
     private const val READ_TIME_OUT_SECONDS = 20L
     private const val WRITE_TIME_OUT_SECONDS = 20L
     private const val TIME_OUT_SECONDS = 10L
+
     const val TAG = "HttpManager"
     private val mapCommonParams = mutableMapOf<String, Any?>()
+    var okHttpClient: OkHttpClient? = null
 
+    /**
+     * http请求缓存配置
+     */
     private val CACHE_PATH = "${PathUtils.getInternalAppCachePath()}/RxHttpCache"
     private const val CACHE_SIZE = 10L * 1024 * 1024
     private const val CACHE_TIME = 1L * TimeConstants.HOUR
@@ -41,7 +48,7 @@ object HttpManager {
     fun init() {
         //证书配置，可以访问所有 具体：https://github.com/liujingxing/rxhttp/wiki/%E5%85%B3%E4%BA%8EHttps
         val sslParams = HttpsUtils.getSslSocketFactory()
-        val clientLocal = OkHttpClient.Builder()
+        okHttpClient = OkHttpClient.Builder()
             .connectTimeout(TIME_OUT_SECONDS, TimeUnit.SECONDS)
             .readTimeout(READ_TIME_OUT_SECONDS, TimeUnit.SECONDS)
             .writeTimeout(WRITE_TIME_OUT_SECONDS, TimeUnit.SECONDS)
@@ -51,9 +58,10 @@ object HttpManager {
             .hostnameVerifier { hostname: String?, session: SSLSession? ->
                 Log.i("RxHttp", "hostnameVerifier hostname=$hostname session=$session")
                 true
-            }.build()
+            }
+            .build()
 
-        RxHttpPlugins.init(clientLocal)                                       //自定义OkHttpClient对象
+        RxHttpPlugins.init(okHttpClient)                                       //自定义OkHttpClient对象
             .setDebug(BuildConfig.DEBUG, true, 2)      //是否开启调试模式，开启后，logcat过滤RxHttp，即可看到整个请求流程日志
             .setCache(File(CACHE_PATH), CACHE_SIZE, CacheMode.REQUEST_NETWORK_FAILED_READ_CACHE, CACHE_TIME)
             //.setExcludeCacheKeys("time")                                    //设置一些key，不参与cacheKey的组拼
