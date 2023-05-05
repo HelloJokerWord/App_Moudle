@@ -7,9 +7,11 @@ import android.view.View
 import android.widget.ImageView
 import androidx.lifecycle.lifecycleScope
 import com.blankj.utilcode.util.FileUtils
+import com.example.appmoudle.agentweb.CommonWebF
 import com.example.appmoudle.base.BaseSupportFragment
 import com.example.appmoudle.config.GlobalPath
 import com.example.appmoudle.databinding.FMainBinding
+import com.example.appmoudle.dialog.CommonBottomWebDialog
 import com.orhanobut.logger.Logger
 import com.third.libcommon.log.LoggerManager
 import kotlinx.coroutines.Dispatchers
@@ -66,6 +68,8 @@ class MainF : BaseSupportFragment<FMainBinding>() {
 
         //默认显示第一页
         showHome()
+
+        CommonBottomWebDialog.show(this,"https://www.baidu.com")
     }
 
     /**

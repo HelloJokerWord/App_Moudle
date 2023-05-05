@@ -136,6 +136,8 @@ dependencies {
     implementation(project(":LibCommon"))
     implementation(project(":LibFragmention"))
     implementation(project(":LibBigImage"))
+    implementation(project(":LibAgentwebCore"))
+    implementation(project(":LibAgentwebFileChooser"))
 
     //objectBox数据库 https://docs.objectbox.io/getting-started
     debugImplementation "io.objectbox:objectbox-android-objectbrowser:${rootProject.version_object_box}"

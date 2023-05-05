@@ -23,4 +23,15 @@ data class EventNetWorkChange(
  * 键盘变化
  */
 @Keep
-data class EventKeyBoardChange(val height: Int) : LiveEvent
+data class EventKeyBoardChange(
+    val height: Int
+) : LiveEvent
+
+/**
+ * h5调用
+ */
+@Keep
+data class EventWeb(
+    val action: String?,             //JS调原生操作指令
+    val data: Any? = null            //操作数据
+) : LiveEvent
