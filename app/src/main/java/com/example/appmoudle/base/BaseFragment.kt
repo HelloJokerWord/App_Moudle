@@ -1,9 +1,9 @@
 package com.example.appmoudle.base
 
 import android.os.Bundle
+import com.blankj.utilcode.util.LogUtils
 import com.example.appmoudle.dialog.CommonLoadingDialog
 import com.lxj.xpopup.core.BasePopupView
-import com.orhanobut.logger.Logger
 import com.weikaiyun.fragmentation.SupportFragment
 
 /**
@@ -19,48 +19,48 @@ abstract class BaseFragment : SupportFragment() {
 
     override fun onResume() {
         super.onResume()
-        Logger.d( "$TAG onResume")
+        LogUtils.d( "$TAG onResume")
     }
 
     override fun onVisible() {
         super.onVisible()
-        Logger.d( "$TAG onVisible")
+        LogUtils.d( "$TAG onVisible")
     }
 
     override fun onInvisible() {
         super.onInvisible()
-        Logger.d( "$TAG onInvisible")
+        LogUtils.d( "$TAG onInvisible")
     }
 
     override fun onPause() {
         super.onPause()
-        Logger.d( "$TAG onPause")
+        LogUtils.d( "$TAG onPause")
     }
 
     override fun onStop() {
         super.onStop()
-        Logger.d( "$TAG onStop")
+        LogUtils.d( "$TAG onStop")
     }
 
     override fun onDestroy() {
         dismissLoadingDialog()
         super.onDestroy()
-        Logger.d( "$TAG onDestroy")
+        LogUtils.d( "$TAG onDestroy")
     }
 
     override fun onBackPressedSupport(): Boolean {
-        Logger.d( "$TAG onBackPressedSupport")
+        LogUtils.d( "$TAG onBackPressedSupport")
         return super.onBackPressedSupport()
     }
 
     override fun onNewBundle(args: Bundle?) {
         super.onNewBundle(args)
-        Logger.d( "$TAG onNewBundle args=${args}")
+        LogUtils.d( "$TAG onNewBundle args=${args}")
     }
 
     override fun putNewBundle(newBundle: Bundle?) {
         super.putNewBundle(newBundle)
-        Logger.d( "$TAG putNewBundle newBundle=${newBundle}")
+        LogUtils.d( "$TAG putNewBundle newBundle=${newBundle}")
     }
 
     /**

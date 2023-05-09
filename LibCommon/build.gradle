@@ -118,9 +118,6 @@ dependencies {
     api 'com.squareup.okhttp3:okhttp:4.10.0'
     api "com.github.liujingxing.rxhttp:rxhttp:$rxhttp_version"
     kapt "com.github.liujingxing.rxhttp:rxhttp-compiler:$rxhttp_version"
-
-    //日志库 https://github.com/orhanobut/logger
-    api 'com.orhanobut:logger:2.2.0'
 }
 
 /**
