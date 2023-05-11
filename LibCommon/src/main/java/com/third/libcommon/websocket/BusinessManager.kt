@@ -25,6 +25,7 @@ class BusinessManager {
     fun startConnect() {
         //1、检查是否已连接 / 是否未登录 / 防抖动多次启动
         val curTime = System.currentTimeMillis()
+        //if (isSocketConnected() || HCUserManager.isLogin() ||(curTime - lastConnectTime < 1500L)) return
         if (isSocketConnected() || (curTime - lastConnectTime < 1500L)) return
         lastConnectTime = curTime
 
