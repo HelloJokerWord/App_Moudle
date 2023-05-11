@@ -28,7 +28,7 @@ class ProgressResponseBody internal constructor(
     }
 
     override fun source(): BufferedSource {
-        bufferedSource = source(responseBody.source()).buffer()
+        bufferedSource = Okio.buffer(source(responseBody.source()))
         return bufferedSource
     }
 

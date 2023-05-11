@@ -1,18 +1,17 @@
 package com.example.appmoudle.manager
 
 import com.example.appmoudle.BuildConfig
+import com.example.appmoudle.config.MMKVKeys
 import com.third.libcommon.MMKVManager
 
 
 /**
  * Created on 2022/9/29.
  * @author Joker
- * Des: 全局日志开关
+ * Des: 全局环境配置
  */
 
-object LogSwitchManager {
-
-    private const val KEY_LOG_ENABLE = "KEY_LOG_ENABLE"
+object EnvSwitchManager {
 
     /**
      * dev渠道：       测试包appId_dev 访问测试环境
@@ -28,10 +27,10 @@ object LogSwitchManager {
     /**
      * 获取日志enable
      */
-    fun isLogEnable() = MMKVManager.getBoolean(KEY_LOG_ENABLE, BuildConfig.FLAVOR == ENV_DEVELOP || BuildConfig.DEBUG)
+    fun isPublish() = MMKVManager.getBoolean(MMKVKeys.KEY_LOG_ENABLE, BuildConfig.FLAVOR == ENV_DEVELOP || BuildConfig.DEBUG)
 
     /**
      * 更新日志可视化
      */
-    fun setLogEnable() = MMKVManager.put(KEY_LOG_ENABLE, true)
+    fun setLogEnable() = MMKVManager.put(MMKVKeys.KEY_LOG_ENABLE, true)
 }

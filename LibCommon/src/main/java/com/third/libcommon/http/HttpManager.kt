@@ -61,7 +61,7 @@ object HttpManager {
             }
             .build()
 
-        RxHttpPlugins.init(okHttpClient)                                       //自定义OkHttpClient对象
+        RxHttpPlugins.init(okHttpClient)                                      //自定义OkHttpClient对象
             .setDebug(BuildConfig.DEBUG, true, 2)      //是否开启调试模式，开启后，logcat过滤RxHttp，即可看到整个请求流程日志
             .setCache(File(CACHE_PATH), CACHE_SIZE, CacheMode.REQUEST_NETWORK_FAILED_READ_CACHE, CACHE_TIME)
             //.setExcludeCacheKeys("time")                                    //设置一些key，不参与cacheKey的组拼
@@ -77,7 +77,7 @@ object HttpManager {
                     it.add("method", "post")
                 }
 
-                getCommonParam().forEach { (key, value) -> it.add(key, value) }
+                getCommonParamMap().forEach { (key, value) -> it.add(key, value) }
 
                 it.addHeader("platform", "android")          //添加公共请求头
             }
@@ -199,7 +199,7 @@ object HttpManager {
     /**
      * http请求公共参数
      */
-    fun getCommonParam(): MutableMap<String, Any?> {
+    fun getCommonParamMap(): MutableMap<String, Any?> {
         val map = mutableMapOf<String, Any?>()
         //动态参数
         map["uid"] = -1
@@ -217,5 +217,14 @@ object HttpManager {
         }
         map.putAll(mapCommonParams)
         return map
+    }
+
+    /**
+     * 公共参数
+     */
+    fun getCommonParamStr(): String {
+        var commonParamStr = "?"
+        getCommonParamMap().forEach { (t, u) -> commonParamStr += "&$t=$u" }
+        return commonParamStr.replace(" ", "%20").replace("'", "%27")
     }
 }

@@ -1,11 +1,10 @@
-package com.third.libcommon.log
+package com.third.libcommon
 
 import androidx.lifecycle.LifecycleOwner
 import com.blankj.utilcode.util.FileUtils
 import com.blankj.utilcode.util.LogUtils
 import com.blankj.utilcode.util.PathUtils
 import com.blankj.utilcode.util.ThreadUtils
-import com.third.libcommon.BuildConfig
 import com.third.libcommon.http.HttpManager
 import com.third.libcommon.http.RequestCallBack
 

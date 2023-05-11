@@ -18,5 +18,10 @@ object MMKVKeys {
      */
     const val KEYBOARD_HIGH = "KEYBOARD_HIGH"
 
+    /**
+     * 日志开关
+     */
+    const val KEY_LOG_ENABLE = "KEY_LOG_ENABLE"
+
 
 }

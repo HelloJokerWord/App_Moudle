@@ -12,7 +12,7 @@ import android.webkit.*
 import androidx.fragment.app.Fragment
 import com.blankj.utilcode.util.ColorUtils
 import com.blankj.utilcode.util.Utils
-import com.example.appmoudle.manager.LogSwitchManager
+import com.example.appmoudle.BuildConfig
 import com.just.agentweb.*
 import com.just.agentweb.WebChromeClient
 import com.just.agentweb.WebViewClient
@@ -95,7 +95,7 @@ class AgentWebBuilder {
         //刷新按钮点击触发
         // mAgentWeb.getWebCreator().getWebView().reload();
 
-        if (LogSwitchManager.isLogEnable()) {
+        if (BuildConfig.DEBUG) {
             AgentWebConfig.debug() //手机浏览器debug模式
         }
     }

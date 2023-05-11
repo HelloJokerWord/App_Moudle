@@ -12,7 +12,7 @@ import com.example.appmoudle.database.DBManager
 import com.third.libcommon.SvgaManager
 import com.rousetime.android_startup.AndroidStartup
 import com.third.libcommon.LiveEventManager
-import com.third.libcommon.log.LogManager
+import com.third.libcommon.LogManager
 import com.third.libcommon.MMKVManager
 import com.third.libcommon.http.HttpManager
 import com.weikaiyun.fragmentation.FragmentationManager

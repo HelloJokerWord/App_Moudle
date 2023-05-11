@@ -2,10 +2,10 @@ package com.example.appmoudle.database
 
 import android.util.Log
 import com.blankj.utilcode.util.Utils
+import com.example.appmoudle.BuildConfig
 import com.example.appmoudle.config.GlobalPath
 import com.example.appmoudle.database.base.BaseDBEntity
 import com.example.appmoudle.database.entity.MyObjectBox
-import com.example.appmoudle.manager.LogSwitchManager
 import io.objectbox.BoxStore
 import io.objectbox.android.Admin
 import io.objectbox.exception.FileCorruptException
@@ -65,7 +65,7 @@ object DBManager {
 
                 Log.i(TAG, "Using ObjectBox ${BoxStore.getVersion()}(${BoxStore.getVersionNative()})")
                 //是否开启可浏览器查看数据库
-                if (LogSwitchManager.isLogEnable()) {
+                if (BuildConfig.DEBUG) {
                     val started = Admin(it).start(Utils.getApp())
                     Log.i(TAG, "started + $started")
                 }
