@@ -1,6 +1,7 @@
 plugins {
     id 'com.android.library'
     id 'org.jetbrains.kotlin.android'
+    id 'maven-publish'
 }
 
 android {
@@ -25,5 +26,68 @@ android {
 
 dependencies {
     //公共库
-    implementation(project(":LibCommon"))
+    //implementation(project(":LibCommon"))
+
+    implementation "androidx.appcompat:appcompat:1.6.1"
+    implementation "androidx.fragment:fragment-ktx:1.5.7"
 }
+
+// 1. 增加上传源码的task
+task sourceJar(type: Jar) {
+    from android.sourceSets.main.java.srcDirs
+    archiveClassifier = "sources"
+}
+
+afterEvaluate {
+    publishing {
+        // 配置maven 仓库
+        repositories { RepositoryHandler handler ->
+            handler.mavenLocal()  // 发布到默认的 本地maven 仓库 ，路径： USER_HOME/.m2/repository/
+
+            handler.maven {
+                url 'http://localhost:8081/repository/base_ioc/'
+                credentials {
+                    username 'admin'
+                    password '92c825d4-7ae8-42e6-afbc-3a5e5cb19a21'
+                }
+                allowInsecureProtocol true
+            }
+        }
+
+        publications {
+            maven(MavenPublication) {
+                //from components.release
+                //artifact "build/outputs/aar/LibFragmention-release.aar"
+                artifact sourceJar // 增加上传源码的 task
+                afterEvaluate { artifact(tasks.getByName("bundleReleaseAar")) }
+
+                groupId 'com.appmoudle.lib'
+                artifactId 'libFragment'
+                version '1.0.0'
+
+                pom.withXml {
+                    def dependenciesNode = asNode().appendNode("dependencies")
+                    configurations.implementation.allDependencies.forEach() {
+                        Dependency dependency ->
+                            if (dependency.version != "unspecified" && dependency.name != "unspecified") {
+                                def dependencyNode = dependenciesNode.appendNode('dependency')
+                                dependencyNode.appendNode('groupId', dependency.group)
+                                dependencyNode.appendNode('artifactId', dependency.name)
+                                dependencyNode.appendNode('version', dependency.version)
+                            }
+                    }
+                    configurations.api.allDependencies.forEach() {
+                        Dependency dependency ->
+                            if (dependency.version != "unspecified" && dependency.name != "unspecified") {
+                                def dependencyNode = dependenciesNode.appendNode('dependency')
+                                dependencyNode.appendNode('groupId', dependency.group)
+                                dependencyNode.appendNode('artifactId', dependency.name)
+                                dependencyNode.appendNode('version', dependency.version)
+                            }
+                    }
+                }
+            }
+        }
+    }
+}
+

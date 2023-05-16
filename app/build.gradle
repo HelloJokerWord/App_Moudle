@@ -33,6 +33,9 @@ android {
         //resConfigs 'zh-rTW', 'zh-rSG', 'zh-rMO', 'zh-rCN', 'ms-rMY', 'zh-rHK'
 
         flavorDimensions "channel"
+
+        def buildTime = new Date().format('yyMMddHHmm')
+        setProperty("archivesBaseName", "${rootProject.app_name}-v${versionName}-${buildTime}")
     }
 
     sourceSets {
@@ -69,6 +72,11 @@ android {
             resValue("string", "app_name", rootProject.app_name)
 
             buildConfigField "Boolean", "isPublish", "true"
+
+            manifestPlaceholders = [
+                    icon     : "@mipmap/ic_launcher",
+                    roundIcon: "@mipmap/ic_launcher_round"
+            ]
         }
 
         develop {
@@ -77,6 +85,11 @@ android {
             resValue "string", "app_name", "${rootProject.app_name}-Test"
 
             buildConfigField "Boolean", "isPublish", "false"
+
+            manifestPlaceholders = [
+                    icon     : "@mipmap/ic_launcher",
+                    roundIcon: "@mipmap/ic_launcher_round"
+            ]
         }
     }
 
@@ -107,13 +120,6 @@ android {
     lint {
         abortOnError false
         checkReleaseBuilds false
-    }
-
-    android.applicationVariants.all { variant ->
-        variant.outputs.all { output ->
-            def buildTime = new Date().format('yyMMddHHmm')
-            outputFileName = "${rootProject.app_name}-${variant.flavorName}-${variant.buildType.name}-v${versionName}-${buildTime}.apk"
-        }
     }
 
     compileOptions {

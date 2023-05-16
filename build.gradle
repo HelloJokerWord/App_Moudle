@@ -7,6 +7,15 @@ buildscript {
         maven { url "https://jitpack.io" }
         //noinspection JcenterRepositoryObsolete
         jcenter()
+
+        maven {
+            url 'http://localhost:8081/repository/base_ioc/'
+            credentials {
+                username 'admin'
+                password '92c825d4-7ae8-42e6-afbc-3a5e5cb19a21'
+            }
+            allowInsecureProtocol true
+        }
     }
 
     dependencies {
@@ -25,6 +34,15 @@ allprojects {
         maven { url "https://jitpack.io" }
         //noinspection JcenterRepositoryObsolete
         jcenter()
+
+        maven {
+            url 'http://localhost:8081/repository/base_ioc/'
+            credentials {
+                username 'admin'
+                password '92c825d4-7ae8-42e6-afbc-3a5e5cb19a21'
+            }
+            allowInsecureProtocol true
+        }
     }
 }
 
