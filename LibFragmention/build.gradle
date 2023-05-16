@@ -63,7 +63,7 @@ afterEvaluate {
 
                 groupId 'com.appmoudle.lib'
                 artifactId 'libFragment'
-                version '1.0.0'
+                version '1.0.1'
 
                 pom.withXml {
                     def dependenciesNode = asNode().appendNode("dependencies")
