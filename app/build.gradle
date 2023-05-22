@@ -3,10 +3,10 @@ plugins {
     id 'org.jetbrains.kotlin.android'
     id 'kotlin-parcelize'
     id 'kotlin-kapt'
-    //id 'com.google.gms.google-services'
-
-
+    id 'com.google.gms.google-services'
 }
+
+apply from: 'jenkins_package.gradle'
 
 android {
     namespace "com.example.appmoudle"
