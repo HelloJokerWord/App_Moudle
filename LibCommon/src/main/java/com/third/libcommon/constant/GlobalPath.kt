@@ -1,4 +1,4 @@
-package com.example.appmoudle.config
+package com.third.libcommon.constant
 
 import com.blankj.utilcode.util.FileUtils
 import com.blankj.utilcode.util.PathUtils

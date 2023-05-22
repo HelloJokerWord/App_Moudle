@@ -1,4 +1,4 @@
-package com.example.appmoudle.config
+package com.third.libcommon.mmkv
 
 /**
  * key一定要等于value
@@ -6,7 +6,7 @@ package com.example.appmoudle.config
  * 避免重复
  */
 
-object MMKVKeys {
+object MMKVKey {
 
     /**
      * 登陆数据
@@ -22,6 +22,8 @@ object MMKVKeys {
      * 日志开关
      */
     const val KEY_LOG_ENABLE = "KEY_LOG_ENABLE"
+
+    const val NO_CONFIRM_ORDER = "NO_CONFIRM_ORDER"
 
 
 }

@@ -1,4 +1,4 @@
-package com.third.libcommon
+package com.third.libcommon.mmkv
 
 import android.content.Context
 import android.os.Parcelable

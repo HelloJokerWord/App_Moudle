@@ -9,6 +9,7 @@ import com.blankj.utilcode.util.LanguageUtils
 import com.blankj.utilcode.util.PathUtils
 import com.rxjava.rxlife.lifeOnMain
 import com.third.libcommon.BuildConfig
+import com.third.libcommon.constant.GlobalConstant
 import okhttp3.OkHttpClient
 import rxhttp.RxHttpPlugins
 import rxhttp.wrapper.cache.CacheMode
@@ -207,6 +208,7 @@ object HttpManager {
         //静态参数
         if (!mapCommonParams.contains("platform")) {
             mapCommonParams["platform"] = "android"
+            mapCommonParams["deviceId"] = GlobalConstant.deviceTag
             mapCommonParams["app_version"] = AppUtils.getAppVersionName()
             mapCommonParams["language"] = LanguageUtils.getSystemLanguage().language
             mapCommonParams["country"] = LanguageUtils.getSystemLanguage().country

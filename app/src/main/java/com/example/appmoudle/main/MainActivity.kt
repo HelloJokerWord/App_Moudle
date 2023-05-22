@@ -2,7 +2,6 @@ package com.example.appmoudle.main
 
 import android.app.Activity
 import android.content.Intent
-import android.icu.lang.UCharacter.GraphemeClusterBreak.L
 import android.os.Bundle
 import android.util.Log
 import com.blankj.utilcode.util.AppUtils
@@ -18,14 +17,14 @@ import com.example.appmoudle.base.BaseSupportActivity
 import com.example.appmoudle.config.EventKeyBoardChange
 import com.example.appmoudle.config.EventNetWorkChange
 import com.example.appmoudle.config.GlobalUserManager
-import com.example.appmoudle.config.MMKVKeys
+import com.third.libcommon.mmkv.MMKVKey
 import com.example.appmoudle.databinding.ActivityMainBinding
 import com.example.appmoudle.dialog.AppConfirmPopup
 import com.example.appmoudle.login.LoginF
 import com.third.libcommon.PermissionManager
 import com.lxj.xpopup.core.BasePopupView
 import com.third.libcommon.LiveEventManager
-import com.third.libcommon.MMKVManager
+import com.third.libcommon.mmkv.MMKVManager
 import com.third.libcommon.WeakHandler
 
 class MainActivity : BaseSupportActivity<ActivityMainBinding>() {
@@ -34,6 +33,7 @@ class MainActivity : BaseSupportActivity<ActivityMainBinding>() {
 
     companion object {
         var mainActivity: MainActivity? = null
+        var isMainActivityAlive = false
     }
 
     //网络变化设置回调
@@ -76,6 +76,7 @@ class MainActivity : BaseSupportActivity<ActivityMainBinding>() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         LogUtils.i("onCreate")
+        isMainActivityAlive = true
         KeyboardUtils.fixAndroidBug5497(this)
         checkAppPermission()
         //注册键盘弹出
@@ -178,8 +179,8 @@ class MainActivity : BaseSupportActivity<ActivityMainBinding>() {
         KeyboardUtils.registerSoftInputChangedListener(this) { height ->
             Log.i(TAG, "键盘高度=$height")
             //更新键盘高度
-            if (MMKVManager.getInt(MMKVKeys.KEYBOARD_HIGH) != height && height > 0) {
-                MMKVManager.put(MMKVKeys.KEYBOARD_HIGH, height)
+            if (MMKVManager.getInt(MMKVKey.KEYBOARD_HIGH) != height && height > 0) {
+                MMKVManager.put(MMKVKey.KEYBOARD_HIGH, height)
             }
             LiveEventManager.post(EventKeyBoardChange(height))
         }

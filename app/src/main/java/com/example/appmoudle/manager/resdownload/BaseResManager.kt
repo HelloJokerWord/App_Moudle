@@ -6,7 +6,7 @@ import com.blankj.utilcode.util.FileUtils
 import com.blankj.utilcode.util.ThreadUtils
 import com.blankj.utilcode.util.Utils
 import com.example.appmoudle.manager.GlideManager
-import com.third.libcommon.MMKVManager
+import com.third.libcommon.mmkv.MMKVManager
 import com.third.libcommon.http.HttpManager
 import com.third.libcommon.http.RequestCallBack
 import com.third.libcommon.http.URLApi

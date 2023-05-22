@@ -3,7 +3,7 @@ package com.example.appmoudle.manager.resdownload
 import androidx.lifecycle.LifecycleOwner
 import com.blankj.utilcode.util.EncryptUtils
 import com.blankj.utilcode.util.FileUtils
-import com.example.appmoudle.config.GlobalPath
+import com.third.libcommon.constant.GlobalPath
 import java.io.File
 
 /**

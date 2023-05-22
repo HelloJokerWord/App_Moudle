@@ -18,7 +18,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
 import com.example.appmoudle.R
-import com.example.appmoudle.config.GlobalPath
+import com.third.libcommon.constant.GlobalPath
 import com.luck.lib.camerax.SimpleCameraX
 import com.luck.picture.lib.animators.AnimationType
 import com.luck.picture.lib.basic.PictureSelector

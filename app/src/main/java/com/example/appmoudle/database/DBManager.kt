@@ -3,7 +3,7 @@ package com.example.appmoudle.database
 import android.util.Log
 import com.blankj.utilcode.util.Utils
 import com.example.appmoudle.BuildConfig
-import com.example.appmoudle.config.GlobalPath
+import com.third.libcommon.constant.GlobalPath
 import com.example.appmoudle.database.base.BaseDBEntity
 import com.example.appmoudle.database.entity.MyObjectBox
 import io.objectbox.BoxStore

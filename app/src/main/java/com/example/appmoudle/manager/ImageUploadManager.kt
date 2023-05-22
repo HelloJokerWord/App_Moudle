@@ -4,7 +4,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.LifecycleOwner
 import com.blankj.utilcode.util.FileUtils
-import com.example.appmoudle.config.GlobalPath
+import com.third.libcommon.constant.GlobalPath
 import com.example.appmoudle.manager.photo.PhotosManager
 import com.third.libcommon.LubanManager
 import com.third.libcommon.http.HttpManager

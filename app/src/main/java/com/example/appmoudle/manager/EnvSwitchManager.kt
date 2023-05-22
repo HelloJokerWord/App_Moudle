@@ -1,8 +1,8 @@
 package com.example.appmoudle.manager
 
 import com.example.appmoudle.BuildConfig
-import com.example.appmoudle.config.MMKVKeys
-import com.third.libcommon.MMKVManager
+import com.third.libcommon.mmkv.MMKVKey
+import com.third.libcommon.mmkv.MMKVManager
 
 
 /**
@@ -27,10 +27,10 @@ object EnvSwitchManager {
     /**
      * 获取日志enable
      */
-    fun isPublish() = MMKVManager.getBoolean(MMKVKeys.KEY_LOG_ENABLE, BuildConfig.FLAVOR == ENV_DEVELOP || BuildConfig.DEBUG)
+    fun isPublish() = MMKVManager.getBoolean(MMKVKey.KEY_LOG_ENABLE, BuildConfig.FLAVOR == ENV_DEVELOP || BuildConfig.DEBUG)
 
     /**
      * 更新日志可视化
      */
-    fun setLogEnable() = MMKVManager.put(MMKVKeys.KEY_LOG_ENABLE, true)
+    fun setLogEnable() = MMKVManager.put(MMKVKey.KEY_LOG_ENABLE, true)
 }

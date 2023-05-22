@@ -1,0 +1,89 @@
+plugins {
+    id 'com.android.library'
+    id 'org.jetbrains.kotlin.android'
+}
+
+android {
+    namespace 'com.libgoogle'
+    compileSdk rootProject.compile_sdk_version
+    buildToolsVersion rootProject.build_tools_version
+
+    defaultConfig {
+        minSdk rootProject.min_sdk
+        targetSdk rootProject.target_sdk
+
+        flavorDimensions "channel"
+
+        consumerProguardFiles "consumer-rules.pro"
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
+    }
+
+    kotlinOptions {
+        jvmTarget = '11'
+    }
+
+    productFlavors {
+        publish {
+            manifestPlaceholders.put("facebook_app_id", "1706959649685156")
+            manifestPlaceholders.put("facebook_client_token", "408f5c8309a1bbdd81401bf83fd99b2")
+            manifestPlaceholders.put("fb_login_protocol_scheme", "fb1706959649685156")
+
+            manifestPlaceholders.put("google_login_key", "999659386790-ee90a0qubjgfcq61oktcf03ikmmvounk.apps.googleusercontent.com")
+
+            manifestPlaceholders.put("appsflyer_key", "UH2XynacAKJGQLZznn4v6F")
+        }
+
+        develop {
+            manifestPlaceholders.put("facebook_app_id", "789801522054654")
+            manifestPlaceholders.put("facebook_client_token", "7f71bfee1faf04b3e97130fc52a8412d")
+            manifestPlaceholders.put("fb_login_protocol_scheme", "fb789801522054654")
+
+            manifestPlaceholders.put("google_login_key", "999659386790-ee90a0qubjgfcq61oktcf03ikmmvounk.apps.googleusercontent.com")
+
+            manifestPlaceholders.put("appsflyer_key", "Ump3w8FCxkMmFKf78Stp6e")
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+
+    implementation(project(":LibCommon"))
+
+    //google登陆 https://developers.google.com/identity/sign-in/android/start-integrating?hl=zh-cn
+    implementation 'com.google.android.gms:play-services-auth:20.5.0'
+
+    //google支付 https://developer.android.com/google/play/billing/release-notes?hl=zh-cn
+    implementation "com.android.billingclient:billing-ktx:6.0.0"
+
+    //google应用更新
+    implementation 'com.google.android.play:app-update-ktx:2.0.1'
+
+    //Facebook login https://developers.facebook.com/docs/facebook-login
+    implementation 'com.facebook.android:facebook-login:15.1.0'
+
+    //https://zh.dev.appsflyer.com/hc/docs/install-android-sdk
+    //Get the latest version from https://mvnrepository.com/artifact/com.appsflyer/af-android-sdk
+    implementation 'com.appsflyer:af-android-sdk:6.9.2'
+
+    //google play安装 https://developer.android.com/guide/playcore/in-app-updates/kotlin-java?hl=zh-cn#groovy
+    implementation "com.android.installreferrer:installreferrer:2.2"
+
+    //firebase
+    implementation 'com.google.firebase:firebase-bom:32.0.0'
+    implementation "com.google.firebase:firebase-analytics-ktx:21.2.2"
+    implementation('com.google.firebase:firebase-auth-ktx:22.0.0') {
+        exclude module: "play-services-safetynet"
+    }
+    api "com.google.firebase:firebase-messaging-ktx:23.1.2"
+}

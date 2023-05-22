@@ -19,6 +19,7 @@ object JsCMD {
     //显示原生toast
     const val showToast = "showToast"
 
-
+    //支付结果
+    const val doPayResult = "doPayResult"
 
 }

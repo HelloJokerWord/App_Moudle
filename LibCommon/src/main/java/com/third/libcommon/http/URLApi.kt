@@ -22,4 +22,6 @@ object URLApi {
     const val URL_GOOGLE_LOGIN = "/user/login"
 
     const val URL_RES_FILE = "/file"
+
+    const val URL_POST_FCM_TOKEN = "/file"
 }

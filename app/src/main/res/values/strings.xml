@@ -8,4 +8,6 @@
     <string name="hc_exit_app_one_more_time">press more time and leave </string>
     <string name="hc_net_no_content">Content not found</string>
     <string name="hc_net_error_retry">Refresh the page</string>
+
+    <string name="hc_toast_try_again">系统繁忙[%1$s],请稍后重试.</string>
 </resources>
