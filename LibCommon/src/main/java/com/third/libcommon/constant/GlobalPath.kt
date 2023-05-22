@@ -44,7 +44,7 @@ object GlobalPath {
     /**
      * log文件上传路径
      */
-    val LOG_PATH = "$ROOT_PATH/log/log"
+    val LOG_PATH = "$ROOT_PATH/log"
 
     /**
      * 图片压缩路径
