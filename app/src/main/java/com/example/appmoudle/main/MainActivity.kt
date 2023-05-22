@@ -17,15 +17,16 @@ import com.example.appmoudle.base.BaseSupportActivity
 import com.example.appmoudle.config.EventKeyBoardChange
 import com.example.appmoudle.config.EventNetWorkChange
 import com.example.appmoudle.config.GlobalUserManager
-import com.third.libcommon.mmkv.MMKVKey
 import com.example.appmoudle.databinding.ActivityMainBinding
 import com.example.appmoudle.dialog.AppConfirmPopup
 import com.example.appmoudle.login.LoginF
-import com.third.libcommon.PermissionManager
+import com.example.appmoudle.manager.photo.PhotosSelectManager
 import com.lxj.xpopup.core.BasePopupView
 import com.third.libcommon.LiveEventManager
-import com.third.libcommon.mmkv.MMKVManager
+import com.third.libcommon.PermissionManager
 import com.third.libcommon.WeakHandler
+import com.third.libcommon.mmkv.MMKVKey
+import com.third.libcommon.mmkv.MMKVManager
 
 class MainActivity : BaseSupportActivity<ActivityMainBinding>() {
 
@@ -89,6 +90,10 @@ class MainActivity : BaseSupportActivity<ActivityMainBinding>() {
         NetworkUtils.registerNetworkStatusChangedListener(netWorkChangeListener)
         //预加载资源
         initResDownload()
+
+        PhotosSelectManager.openAlbum(this) {
+
+        }
     }
 
     //APP活着的时候回来APP调该方法

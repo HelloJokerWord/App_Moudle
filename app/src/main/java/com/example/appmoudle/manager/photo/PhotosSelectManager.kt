@@ -18,15 +18,14 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
 import com.example.appmoudle.R
-import com.third.libcommon.constant.GlobalPath
 import com.luck.lib.camerax.SimpleCameraX
 import com.luck.picture.lib.animators.AnimationType
 import com.luck.picture.lib.basic.PictureSelector
 import com.luck.picture.lib.config.PictureMimeType
-import com.luck.picture.lib.config.PictureSelectionConfig
 import com.luck.picture.lib.config.SelectLimitType
 import com.luck.picture.lib.config.SelectMimeType
 import com.luck.picture.lib.config.SelectModeConfig
+import com.luck.picture.lib.config.SelectorConfig
 import com.luck.picture.lib.engine.CompressFileEngine
 import com.luck.picture.lib.engine.CropFileEngine
 import com.luck.picture.lib.engine.UriToFileTransformEngine
@@ -48,11 +47,13 @@ import com.luck.picture.lib.utils.PictureFileUtils
 import com.luck.picture.lib.utils.SandboxTransformUtils
 import com.luck.picture.lib.utils.StyleUtils
 import com.third.libcommon.PermissionManager
+import com.third.libcommon.constant.GlobalPath
 import com.yalantis.ucrop.UCrop
 import com.yalantis.ucrop.UCropImageEngine
 import top.zibin.luban.Luban
 import top.zibin.luban.OnCompressListener
 import java.io.File
+
 
 /**
  * 相册图片选择器
@@ -60,11 +61,11 @@ import java.io.File
  * 详细参数配置介绍：
  * https://github.com/LuckSiege/PictureSelector/blob/version_component/README_CN.md
  */
-object PhotosManager {
+object PhotosSelectManager {
 
-    const val TAG = "PhotosUtil"
+    private const val TAG = "PhotosSelectManager"
 
-    val selectorStyle = PictureSelectorStyle()
+    private val selectorStyle = PictureSelectorStyle()
 
     var selectResult: ((data: MutableList<PhotoBean>) -> Unit)? = null
 
@@ -203,195 +204,195 @@ object PhotosManager {
                 .forResult(callResult)
         })
     }
-}
 
-/**
- * 自定义拍照
- */
-private class MeOnCameraInterceptListener : OnCameraInterceptListener {
-    override fun openCamera(fragment: Fragment?, cameraMode: Int, requestCode: Int) {
-        SimpleCameraX.of().apply {
-            isAutoRotation(true)
-            setCameraMode(cameraMode)
-            setVideoFrameRate(25)
-            setVideoBitRate(3 * 1024 * 1024)
-            //isDisplayRecordChangeTime(true)
-            isManualFocusCameraPreview(true)
-            isZoomCameraPreview(true)
-            setOutputPathDir(GlobalPath.CAMERA_OUT_PUT)
-            setImageEngine { context, url, imageView -> Glide.with(context).load(url).into(imageView) }
-            fragment?.activity?.let { start(it, fragment, requestCode) }
+    /**
+     * 自定义拍照
+     */
+    private class MeOnCameraInterceptListener : OnCameraInterceptListener {
+        override fun openCamera(fragment: Fragment?, cameraMode: Int, requestCode: Int) {
+            SimpleCameraX.of().apply {
+                isAutoRotation(true)
+                setCameraMode(cameraMode)
+                setVideoFrameRate(25)
+                setVideoBitRate(3 * 1024 * 1024)
+                //isDisplayRecordChangeTime(true)
+                isManualFocusCameraPreview(true)
+                isZoomCameraPreview(true)
+                setOutputPathDir(GlobalPath.CAMERA_OUT_PUT)
+                setImageEngine { context, url, imageView -> Glide.with(context).load(url).into(imageView) }
+                fragment?.activity?.let { start(it, fragment, requestCode) }
+            }
         }
     }
-}
 
-/**
- * 自定义裁剪
- */
-private class ImageFileCropEngine : CropFileEngine {
+    /**
+     * 自定义裁剪
+     */
+    private class ImageFileCropEngine : CropFileEngine {
 
-    override fun onStartCrop(fragment: Fragment, srcUri: Uri, destinationUri: Uri, dataSource: ArrayList<String>, requestCode: Int) {
-        val options = UCrop.Options().apply {
-            setHideBottomControls(false)
-            setFreeStyleCropEnabled(false)
-            setShowCropFrame(true)
-            setShowCropGrid(true)
-            setCircleDimmedLayer(false)
-            withAspectRatio(-1f, -1f)
-            setCropOutputPathDir(GlobalPath.CROP_OUT_PUT)
-            isCropDragSmoothToCenter(false)
-            setSkipCropMimeType(PictureMimeType.ofGIF(), PictureMimeType.ofWEBP())
-            isForbidCropGifWebp(true)
-            isForbidSkipMultipleCrop(true)
-            setMaxScaleMultiplier(100f)
-            if (PhotosManager.selectorStyle.selectMainStyle.statusBarColor != 0) {
-                val mainStyle: SelectMainStyle = PhotosManager.selectorStyle.selectMainStyle
-                val isDarkStatusBarBlack = mainStyle.isDarkStatusBarBlack
-                val statusBarColor = mainStyle.statusBarColor
-                isDarkStatusBarBlack(isDarkStatusBarBlack)
-                if (StyleUtils.checkStyleValidity(statusBarColor)) {
-                    setStatusBarColor(statusBarColor)
-                    setToolbarColor(statusBarColor)
+        override fun onStartCrop(fragment: Fragment, srcUri: Uri, destinationUri: Uri, dataSource: ArrayList<String>, requestCode: Int) {
+            val options = UCrop.Options().apply {
+                setHideBottomControls(false)
+                setFreeStyleCropEnabled(false)
+                setShowCropFrame(true)
+                setShowCropGrid(true)
+                setCircleDimmedLayer(false)
+                withAspectRatio(-1f, -1f)
+                setCropOutputPathDir(GlobalPath.CROP_OUT_PUT)
+                isCropDragSmoothToCenter(false)
+                setSkipCropMimeType(PictureMimeType.ofGIF(), PictureMimeType.ofWEBP())
+                isForbidCropGifWebp(true)
+                isForbidSkipMultipleCrop(true)
+                setMaxScaleMultiplier(100f)
+                if (selectorStyle.selectMainStyle.statusBarColor != 0) {
+                    val mainStyle: SelectMainStyle = selectorStyle.selectMainStyle
+                    val isDarkStatusBarBlack = mainStyle.isDarkStatusBarBlack
+                    val statusBarColor = mainStyle.statusBarColor
+                    isDarkStatusBarBlack(isDarkStatusBarBlack)
+                    if (StyleUtils.checkStyleValidity(statusBarColor)) {
+                        setStatusBarColor(statusBarColor)
+                        setToolbarColor(statusBarColor)
+                    } else {
+                        setStatusBarColor(ColorUtils.getColor(R.color.ps_color_grey))
+                        setToolbarColor(ColorUtils.getColor(R.color.ps_color_grey))
+                    }
+                    val titleBarStyle: TitleBarStyle = selectorStyle.titleBarStyle
+                    if (StyleUtils.checkStyleValidity(titleBarStyle.titleTextColor)) {
+                        setToolbarWidgetColor(titleBarStyle.titleTextColor)
+                    } else {
+                        setToolbarWidgetColor(ColorUtils.getColor(R.color.color_white))
+                    }
                 } else {
                     setStatusBarColor(ColorUtils.getColor(R.color.ps_color_grey))
                     setToolbarColor(ColorUtils.getColor(R.color.ps_color_grey))
-                }
-                val titleBarStyle: TitleBarStyle = PictureSelectionConfig.selectorStyle.titleBarStyle
-                if (StyleUtils.checkStyleValidity(titleBarStyle.titleTextColor)) {
-                    setToolbarWidgetColor(titleBarStyle.titleTextColor)
-                } else {
                     setToolbarWidgetColor(ColorUtils.getColor(R.color.color_white))
                 }
-            } else {
-                setStatusBarColor(ColorUtils.getColor(R.color.ps_color_grey))
-                setToolbarColor(ColorUtils.getColor(R.color.ps_color_grey))
-                setToolbarWidgetColor(ColorUtils.getColor(R.color.color_white))
-            }
-        }
-
-        val uCrop = UCrop.of(srcUri, destinationUri, dataSource)
-        uCrop.withOptions(options)
-        uCrop.setImageEngine(object : UCropImageEngine {
-            override fun loadImage(context: Context?, url: String?, imageView: ImageView?) {
-                if (!assertValidRequest(context) || context == null || imageView == null) return
-                Glide.with(context)
-                    .load(url)
-                    .override(180, 180)
-                    .into(imageView)
             }
 
-            override fun loadImage(context: Context?, url: Uri?, maxWidth: Int, maxHeight: Int, call: UCropImageEngine.OnCallbackListener<Bitmap>?) {
-                if (context == null || url == null) return
-                Glide.with(context)
-                    .asBitmap()
-                    .load(url)
-                    .override(maxWidth, maxHeight)
-                    .into(object : CustomTarget<Bitmap>() {
-                        override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
-                            call?.onCall(resource)
-                        }
-
-                        override fun onLoadCleared(placeholder: Drawable?) {
-                            call?.onCall(null)
-                        }
-                    })
-            }
-        })
-        uCrop.start(fragment.requireActivity(), fragment, requestCode)
-    }
-
-    private fun assertValidRequest(context: Context?) = when {
-        context is Activity -> !isDestroy(context)
-        context is ContextWrapper && (context.baseContext is Activity) -> !isDestroy(context.baseContext as Activity)
-        else -> true
-    }
-
-    private fun isDestroy(activity: Activity?) = if (activity == null) true else activity.isFinishing || activity.isDestroyed
-}
-
-/**
- * 自定义压缩
- */
-private class ImageFileCompressEngine : CompressFileEngine {
-    override fun onStartCompress(context: Context?, source: ArrayList<Uri>?, call: OnKeyValueResultCallbackListener?) {
-        if (context == null || source == null || call == null) return
-        Luban.with(context)
-            .load(source)
-            .ignoreBy(100)
-            .setRenameListener { filePath ->
-                val indexOf = filePath.lastIndexOf(".")
-                val postfix = if (indexOf != -1) filePath.substring(indexOf) else ".jpg"
-                DateUtils.getCreateFileName("CMP_") + postfix
-            }.filter { path ->
-                if (PictureMimeType.isUrlHasImage(path) && !PictureMimeType.isHasHttp(path)) true else !PictureMimeType.isUrlHasGif(path)
-            }.setCompressListener(object : OnCompressListener {
-                override fun onStart() {}
-                override fun onSuccess(file: File?) {
-                    call.onCallback("", file?.path)
+            val uCrop = UCrop.of(srcUri, destinationUri, dataSource)
+            uCrop.withOptions(options)
+            uCrop.setImageEngine(object : UCropImageEngine {
+                override fun loadImage(context: Context?, url: String?, imageView: ImageView?) {
+                    if (!assertValidRequest(context) || context == null || imageView == null) return
+                    Glide.with(context)
+                        .load(url)
+                        .override(180, 180)
+                        .into(imageView)
                 }
 
-                override fun onError(e: Throwable?) {
-                    e?.printStackTrace()
-                    call.onCallback("", null)
+                override fun loadImage(context: Context?, url: Uri?, maxWidth: Int, maxHeight: Int, call: UCropImageEngine.OnCallbackListener<Bitmap>?) {
+                    if (context == null || url == null) return
+                    Glide.with(context)
+                        .asBitmap()
+                        .load(url)
+                        .override(maxWidth, maxHeight)
+                        .into(object : CustomTarget<Bitmap>() {
+                            override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
+                                call?.onCall(resource)
+                            }
+
+                            override fun onLoadCleared(placeholder: Drawable?) {
+                                call?.onCall(null)
+                            }
+                        })
                 }
-            }).launch()
-    }
-}
-
-/**
- * 拦截自定义提示
- */
-private class MeOnSelectLimitTipsListener : OnSelectLimitTipsListener {
-    override fun onSelectLimitTips(context: Context?, media: LocalMedia?, config: PictureSelectionConfig?, limitType: Int): Boolean {
-        if (context == null || media == null || config == null) return false
-        when (limitType) {
-            SelectLimitType.SELECT_MIN_SELECT_LIMIT -> {
-                ToastUtils.showShort("图片最少不能低于" + config.minSelectNum + "张")
-                return true
-            }
-
-            SelectLimitType.SELECT_MIN_VIDEO_SELECT_LIMIT -> {
-                ToastUtils.showShort("视频最少不能低于" + config.minVideoSelectNum + "个")
-                return true
-            }
-
-            SelectLimitType.SELECT_MIN_AUDIO_SELECT_LIMIT -> {
-                ToastUtils.showShort("音频最少不能低于" + config.minAudioSelectNum + "个")
-                return true
-            }
+            })
+            uCrop.start(fragment.requireActivity(), fragment, requestCode)
         }
-        return false
-    }
-}
 
-/**
- * 自定义沙盒文件处理
- */
-private class MeSandboxFileEngine : UriToFileTransformEngine {
-    override fun onUriToFileAsyncTransform(context: Context?, srcPath: String?, mineType: String?, call: OnKeyValueResultCallbackListener?) {
-        call?.onCallback(srcPath, SandboxTransformUtils.copyPathToSandbox(context, srcPath, mineType))
-    }
-}
+        private fun assertValidRequest(context: Context?) = when {
+            context is Activity -> !isDestroy(context)
+            context is ContextWrapper && (context.baseContext is Activity) -> !isDestroy(context.baseContext as Activity)
+            else -> true
+        }
 
-/**
- * 添加权限说明
- */
-private class MeOnPermissionDescriptionListener : OnPermissionDescriptionListener {
-    override fun onPermissionDescription(fragment: Fragment?, permIkionArray: Array<out String>?) {
-        Log.i(PhotosManager.TAG, "onPermissionDescription array=$permIkionArray")
+        private fun isDestroy(activity: Activity?) = if (activity == null) true else activity.isFinishing || activity.isDestroyed
     }
 
-    override fun onDismiss(fragment: Fragment?) {
-        Log.i(PhotosManager.TAG, "onDismiss")
-    }
-}
+    /**
+     * 自定义压缩
+     */
+    private class ImageFileCompressEngine : CompressFileEngine {
+        override fun onStartCompress(context: Context?, source: ArrayList<Uri>?, call: OnKeyValueResultCallbackListener?) {
+            if (context == null || source == null || call == null) return
+            Luban.with(context)
+                .load(source)
+                .ignoreBy(100)
+                .setRenameListener { filePath ->
+                    val indexOf = filePath.lastIndexOf(".")
+                    val postfix = if (indexOf != -1) filePath.substring(indexOf) else ".jpg"
+                    DateUtils.getCreateFileName("CMP_") + postfix
+                }.filter { path ->
+                    if (PictureMimeType.isUrlHasImage(path) && !PictureMimeType.isHasHttp(path)) true else !PictureMimeType.isUrlHasGif(path)
+                }.setCompressListener(object : OnCompressListener {
+                    override fun onStart() {}
+                    override fun onSuccess(file: File?) {
+                        call.onCallback("", file?.path)
+                    }
 
-/**
- * 权限拒绝后回调
- */
-private class MeOnPermissionDeniedListener : OnPermissionDeniedListener {
-    override fun onDenied(fragment: Fragment?, permissionArray: Array<out String>?, requestCode: Int, call: OnCallbackListener<Boolean>?) {
-        Log.i(PhotosManager.TAG, "permissionArray=$permissionArray")
+                    override fun onError(e: Throwable?) {
+                        e?.printStackTrace()
+                        call.onCallback("", null)
+                    }
+                }).launch()
+        }
     }
 
+    /**
+     * 拦截自定义提示
+     */
+    private class MeOnSelectLimitTipsListener : OnSelectLimitTipsListener {
+        override fun onSelectLimitTips(context: Context?, media: LocalMedia?, config: SelectorConfig?, limitType: Int): Boolean {
+            if (context == null || media == null || config == null) return false
+            when (limitType) {
+                SelectLimitType.SELECT_MIN_SELECT_LIMIT -> {
+                    ToastUtils.showShort("图片最少不能低于" + config.minSelectNum + "张")
+                    return true
+                }
+
+                SelectLimitType.SELECT_MIN_VIDEO_SELECT_LIMIT -> {
+                    ToastUtils.showShort("视频最少不能低于" + config.minVideoSelectNum + "个")
+                    return true
+                }
+
+                SelectLimitType.SELECT_MIN_AUDIO_SELECT_LIMIT -> {
+                    ToastUtils.showShort("音频最少不能低于" + config.minAudioSelectNum + "个")
+                    return true
+                }
+            }
+            return false
+        }
+    }
+
+    /**
+     * 自定义沙盒文件处理
+     */
+    private class MeSandboxFileEngine : UriToFileTransformEngine {
+        override fun onUriToFileAsyncTransform(context: Context?, srcPath: String?, mineType: String?, call: OnKeyValueResultCallbackListener?) {
+            call?.onCallback(srcPath, SandboxTransformUtils.copyPathToSandbox(context, srcPath, mineType))
+        }
+    }
+
+    /**
+     * 添加权限说明
+     */
+    private class MeOnPermissionDescriptionListener : OnPermissionDescriptionListener {
+        override fun onPermissionDescription(fragment: Fragment?, permIkionArray: Array<out String>?) {
+            Log.i(TAG, "onPermissionDescription array=$permIkionArray")
+        }
+
+        override fun onDismiss(fragment: Fragment?) {
+            Log.i(TAG, "onDismiss")
+        }
+    }
+
+    /**
+     * 权限拒绝后回调
+     */
+    private class MeOnPermissionDeniedListener : OnPermissionDeniedListener {
+        override fun onDenied(fragment: Fragment?, permissionArray: Array<out String>?, requestCode: Int, call: OnCallbackListener<Boolean>?) {
+            Log.i(TAG, "permissionArray=$permissionArray")
+        }
+
+    }
 }

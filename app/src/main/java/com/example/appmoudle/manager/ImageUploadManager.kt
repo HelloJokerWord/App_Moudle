@@ -5,7 +5,7 @@ import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.LifecycleOwner
 import com.blankj.utilcode.util.FileUtils
 import com.third.libcommon.constant.GlobalPath
-import com.example.appmoudle.manager.photo.PhotosManager
+import com.example.appmoudle.manager.photo.PhotosSelectManager
 import com.third.libcommon.LubanManager
 import com.third.libcommon.http.HttpManager
 import com.third.libcommon.http.RequestCallBack
@@ -35,11 +35,11 @@ object ImageUploadManager {
      */
     fun selectImageAndUpload(activity: FragmentActivity, isTakePhoto: Boolean = false) {
         if (isTakePhoto) {
-            PhotosManager.openCamera(activity) {
+            PhotosSelectManager.openCamera(activity) {
                 it.forEach { bean -> uploadImg(activity, bean.file) }
             }
         } else {
-            PhotosManager.openAlbum(activity) {
+            PhotosSelectManager.openAlbum(activity) {
                 it.forEach { bean -> uploadImg(activity, bean.file) }
             }
         }

@@ -28,7 +28,7 @@ ext {
     version_rxandroid = "3.0.2"
     version_okhttp = "4.10.0"
     version_rxhttp = "3.0.3"
-    version_pic_select = "v3.10.7"
+    version_pic_select = "v3.11.1"
     version_glide = "4.15.1"
 
     //签名密钥
