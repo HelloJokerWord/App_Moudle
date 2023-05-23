@@ -5,6 +5,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.webkit.WebView
+import com.example.appmoudle.base.BaseFragment
 import com.example.appmoudle.config.EventWeb
 import com.example.appmoudle.databinding.FCommonWebBinding
 import com.third.libcommon.LiveEventManager
@@ -18,14 +19,16 @@ import com.third.libcommon.LiveEventManager
 class CommonWebF : BaseAgentWebFragment<FCommonWebBinding>() {
 
     companion object {
-        fun newInstance(title: String? = "", url: String?, isShowTitle: Boolean = true): CommonWebF {
-            val fragment = CommonWebF()
-            val bundle = Bundle()
-            bundle.putString("title", title)
-            bundle.putString("url", url)
-            bundle.putBoolean("isShowTitle", isShowTitle)
-            fragment.arguments = bundle
-            return fragment
+        fun startWeb(fragment: BaseFragment, title: String? = "", url: String?, isShowTitle: Boolean = true): CommonWebF {
+            val webF = CommonWebF()
+            webF.arguments = Bundle().apply {
+                putString("title", title)
+                putString("url", url)
+                putBoolean("isShowTitle", isShowTitle)
+            }
+
+            fragment.start(webF)
+            return webF
         }
     }
 

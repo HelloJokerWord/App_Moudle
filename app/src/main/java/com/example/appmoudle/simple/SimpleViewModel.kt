@@ -12,13 +12,16 @@ import com.third.libcommon.http.URLApi
 /**
  * Created on 2022/9/13.
  * @author Joker
- * Des:
+ * Des:数据中心
  */
 
 class SimpleViewModel(application: Application) : AndroidViewModel(application) {
 
     val loginData = MutableLiveData<LoginBean?>()
 
+    /**
+     * 请求数据处理
+     */
     fun googleLogin(owner: LifecycleOwner) {
         HttpManager.postBody(owner, URLApi.URL_GOOGLE_LOGIN, mutableMapOf("1" to 2), object : RequestCallBack<LoginBean?> {
             override fun onSuccess(data: LoginBean?) {

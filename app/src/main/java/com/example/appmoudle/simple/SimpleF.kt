@@ -1,25 +1,17 @@
 package com.example.appmoudle.simple
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
-import androidx.fragment.app.viewModels
-import androidx.lifecycle.lifecycleScope
 import com.example.appmoudle.base.BaseFragment
 import com.example.appmoudle.base.BaseSupportFragment
 import com.example.appmoudle.databinding.LayoutSimpleBinding
-import com.example.appmoudle.login.bean.LoginBean
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Deferred
-import kotlinx.coroutines.launch
-import rxhttp.async
-import rxhttp.toAwait
-import rxhttp.tryAwait
-import rxhttp.wrapper.param.RxHttp
 
 /**
+ * 普通页面模板
  *
+ * 常规 启动:start 关闭：pop  关闭到栈：popTo 启动并关闭到startWithPopTo
+ * 具体方法可以查看 SupportFragment 提供的相关方法
  */
 class SimpleF : BaseSupportFragment<LayoutSimpleBinding>() {
 
@@ -28,9 +20,9 @@ class SimpleF : BaseSupportFragment<LayoutSimpleBinding>() {
     companion object {
         fun startF(fragment: BaseFragment): SimpleF {
             val f = SimpleF()
-            val bundle = Bundle()
+            f.arguments = Bundle().apply {
 
-            f.arguments = bundle
+            }
             fragment.start(f)
             return f
         }

@@ -10,8 +10,7 @@ import com.weikaiyun.fragmentation.SupportFragment
 
 /**
  * CreateBy:Joker
- * CreateTime:2022/11/16 10:28
- * description：
+ * description：中间弹窗
  */
 class SimpleCenterDialog(context: Context) : BaseCenterPopupView<LayoutSimpleBinding>(context) {
 

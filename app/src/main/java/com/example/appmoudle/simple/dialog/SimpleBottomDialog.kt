@@ -10,8 +10,7 @@ import com.weikaiyun.fragmentation.SupportFragment
 
 /**
  * CreateBy:Joker
- * CreateTime:2022/11/16 10:28
- * description：
+ * description：底部弹窗
  */
 class SimpleBottomDialog(context: Context) : BaseBottomPopupView<LayoutSimpleBinding>(context) {
 

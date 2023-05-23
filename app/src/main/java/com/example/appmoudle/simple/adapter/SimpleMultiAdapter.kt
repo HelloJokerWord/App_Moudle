@@ -8,7 +8,7 @@ import com.example.appmoudle.simple.entity.SimpleEntity
 /**
  * Created on 2023/1/31.
  * @author Joker
- * Des: 单布局
+ * Des: 多布局
  */
 
 class SimpleMultiAdapter : BaseMultiItemQuickAdapter<SimpleEntity, BaseViewHolder>() {

@@ -9,7 +9,7 @@ import android.widget.FrameLayout
 import com.example.appmoudle.R
 import com.third.libcommon.SvgaManager
 import com.opensource.svgaplayer.SVGAImageView
-import com.scwang.smart.refresh.layout.api.RefreshHeader
+import com.scwang.smart.refresh.layout.api.RefreshFooter
 import com.scwang.smart.refresh.layout.api.RefreshKernel
 import com.scwang.smart.refresh.layout.api.RefreshLayout
 import com.scwang.smart.refresh.layout.constant.RefreshState
@@ -17,7 +17,7 @@ import com.scwang.smart.refresh.layout.constant.SpinnerStyle
 
 
 @SuppressLint("RestrictedApi")
-class HCRefreshHeader : FrameLayout, RefreshHeader {
+class CommonRefreshFooter : FrameLayout, RefreshFooter {
 
     constructor(context: Context) : super(context) {
         initView(context)
@@ -43,13 +43,13 @@ class HCRefreshHeader : FrameLayout, RefreshHeader {
 
     override fun onStateChanged(refreshLayout: RefreshLayout, oldState: RefreshState, newState: RefreshState) {
         when (newState) {
-            RefreshState.PullDownToRefresh -> {
-                //下拉开始刷新
+            RefreshState.PullUpToLoad -> {
+                //上拉加载更多
                 SvgaManager.startRefresh(svgaImageView)
             }
 
-            RefreshState.RefreshFinish -> {
-                //刷新结束
+            RefreshState.LoadFinish -> {
+                //加载更多结束
                 SvgaManager.stopPlay(svgaImageView)
             }
 
@@ -57,8 +57,8 @@ class HCRefreshHeader : FrameLayout, RefreshHeader {
         }
     }
 
-    override fun getView(): View = this   //真实的视图就是自己，不能返回null
-    override fun getSpinnerStyle(): SpinnerStyle = SpinnerStyle.Translate    //指定为平移，不能null
+    override fun getView(): View = this
+    override fun getSpinnerStyle(): SpinnerStyle = SpinnerStyle.Translate
     override fun setPrimaryColors(vararg colors: Int) {}
     override fun onInitialized(kernel: RefreshKernel, height: Int, maxDragHeight: Int) {}
     override fun onMoving(isDragging: Boolean, percent: Float, offset: Int, height: Int, maxDragHeight: Int) {}
@@ -68,4 +68,5 @@ class HCRefreshHeader : FrameLayout, RefreshHeader {
     override fun onHorizontalDrag(percentX: Float, offsetX: Int, offsetMax: Int) {}
     override fun isSupportHorizontalDrag(): Boolean = false
     override fun autoOpen(duration: Int, dragRate: Float, animationOnly: Boolean): Boolean = true
+    override fun setNoMoreData(noMoreData: Boolean): Boolean = false
 }

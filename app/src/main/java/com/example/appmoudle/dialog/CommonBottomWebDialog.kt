@@ -89,6 +89,7 @@ class CommonBottomWebDialog(context: Context) : BaseBottomPopupView<DialogBottom
             }
         }
     }
+
     private val observer = Observer<EventWeb> {
         when (it.action) {
             JsCMD.closeWebPage -> dismiss()

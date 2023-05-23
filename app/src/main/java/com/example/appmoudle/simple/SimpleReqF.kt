@@ -17,7 +17,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 /**
- *
+ * 带请求介绍模板
  */
 class SimpleReqF : BaseSupportFragment<LayoutSimpleBinding>() {
 
@@ -26,9 +26,9 @@ class SimpleReqF : BaseSupportFragment<LayoutSimpleBinding>() {
     companion object {
         fun startF(fragment: BaseFragment): SimpleReqF {
             val f = SimpleReqF()
-            val bundle = Bundle()
+            f.arguments = Bundle().apply {
 
-            f.arguments = bundle
+            }
             fragment.start(f)
             return f
         }
@@ -61,6 +61,9 @@ class SimpleReqF : BaseSupportFragment<LayoutSimpleBinding>() {
         }
     }
 
+    /**
+     * 合并请求结果
+     */
     private fun handleData(a: SimpleReqEntity?, b: SimpleReqEntity?) {
 
     }
@@ -73,6 +76,9 @@ class SimpleReqF : BaseSupportFragment<LayoutSimpleBinding>() {
         HttpManager.getSync("", mutableMapOf(), SimpleReqEntity::class.java)
     }
 
+    /**
+     * 普通请求结果
+     */
     private fun httpResult() {
         simpleViewModel.loginData.observe(viewLifecycleOwner) {
             if (it == null) return@observe
@@ -80,6 +86,9 @@ class SimpleReqF : BaseSupportFragment<LayoutSimpleBinding>() {
         }
     }
 
+    /**
+     * 普通请求发起
+     */
     private fun httpReq() {
         simpleViewModel.googleLogin(viewLifecycleOwner)
     }

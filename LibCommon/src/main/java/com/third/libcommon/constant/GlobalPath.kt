@@ -16,7 +16,7 @@ object GlobalPath {
      */
     private val ROOT_PATH = PathUtils.getInternalAppCachePath()
 
-    private const val DATA_BASE_VERSION = 6  //每次数据库修改字段等，需要升级，以免覆盖安装奔溃
+    private const val DATA_BASE_VERSION = 1  //每次数据库修改字段等，需要升级，以免覆盖安装奔溃
 
     /**
      * 创建主数据库文件路径

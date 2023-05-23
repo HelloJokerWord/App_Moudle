@@ -13,8 +13,6 @@ import com.weikaiyun.fragmentation.SupportFragment
 
 /**
  * Description: 自定义自由定位Position弹窗
- * Create by dance, at 2019/6/14
- * 应用内消息弹窗 区别于系统弹窗
  */
 class SimplePositionDialog(context: Context) : BasePositionPopupView<LayoutSimpleBinding>(context) {
     override fun getImplLayoutId() = R.layout.layout_simple

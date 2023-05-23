@@ -6,6 +6,9 @@ import android.util.Log
 
 import com.tencent.mmkv.MMKV
 
+/**
+ * 数据存储
+ */
 object MMKVManager {
     private const val TAG = "MMKVManager"
 
