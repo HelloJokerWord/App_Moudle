@@ -3,6 +3,7 @@ package com.example.appmoudle.simple.dialog
 import android.content.Context
 import com.blankj.utilcode.util.ConvertUtils
 import com.example.appmoudle.R
+import com.example.appmoudle.base.BaseFragment
 import com.example.appmoudle.base.BasePositionPopupView
 import com.example.appmoudle.databinding.LayoutSimpleBinding
 import com.gyf.immersionbar.ImmersionBar
@@ -20,7 +21,7 @@ class SimplePositionDialog(context: Context) : BasePositionPopupView<LayoutSimpl
     override fun getViewBinding() = LayoutSimpleBinding.bind(popupImplView)
 
     companion object {
-        fun show(fragment: SupportFragment): SimplePositionDialog? {
+        fun show(fragment: BaseFragment): SimplePositionDialog? {
             fragment.context?.let {
                 val dialog = SimplePositionDialog(it).apply {
                     this.fragment = fragment

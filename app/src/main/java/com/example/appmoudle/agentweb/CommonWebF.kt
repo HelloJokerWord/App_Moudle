@@ -8,6 +8,7 @@ import android.webkit.WebView
 import com.example.appmoudle.base.BaseFragment
 import com.example.appmoudle.config.EventWeb
 import com.example.appmoudle.databinding.FCommonWebBinding
+import com.example.appmoudle.googlepay.GooglePayManager
 import com.third.libcommon.LiveEventManager
 
 
@@ -72,7 +73,7 @@ class CommonWebF : BaseAgentWebFragment<FCommonWebBinding>() {
     }
 
     override fun onDestroy() {
-        //GooglePayManager.onDestroy()
+        GooglePayManager.onDestroy()
         super.onDestroy()
     }
 
@@ -83,7 +84,7 @@ class CommonWebF : BaseAgentWebFragment<FCommonWebBinding>() {
 
     private fun checkOrderCache() {
         if (url?.contains(WebURL.TOP_UP_PAGE_URL) == true) {
-            // GooglePayManager.checkOrderCache()
+             GooglePayManager.checkOrderCache()
         }
     }
 }

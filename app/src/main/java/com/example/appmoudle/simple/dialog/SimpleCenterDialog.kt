@@ -3,6 +3,7 @@ package com.example.appmoudle.simple.dialog
 import android.content.Context
 import com.example.appmoudle.R
 import com.example.appmoudle.base.BaseCenterPopupView
+import com.example.appmoudle.base.BaseFragment
 import com.example.appmoudle.databinding.LayoutSimpleBinding
 import com.lxj.xpopup.XPopup
 import com.weikaiyun.fragmentation.SupportFragment
@@ -18,7 +19,7 @@ class SimpleCenterDialog(context: Context) : BaseCenterPopupView<LayoutSimpleBin
     override fun getImplLayoutId() = R.layout.layout_simple
 
     companion object {
-        fun show(fragment: SupportFragment, content: String?, onConfirm: (() -> Unit)? = null): SimpleCenterDialog? {
+        fun show(fragment: BaseFragment, content: String?, onConfirm: (() -> Unit)? = null): SimpleCenterDialog? {
             fragment.context?.let {
                 val dialog = SimpleCenterDialog(it).apply {
                     this.content = content

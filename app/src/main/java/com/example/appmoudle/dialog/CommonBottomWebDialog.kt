@@ -14,9 +14,11 @@ import com.blankj.utilcode.util.Utils
 import com.example.appmoudle.R
 import com.example.appmoudle.agentweb.AgentWebBuilder
 import com.example.appmoudle.agentweb.JsCMD
+import com.example.appmoudle.agentweb.WebURL
 import com.example.appmoudle.base.BaseBottomPopupView
 import com.example.appmoudle.config.EventWeb
 import com.example.appmoudle.databinding.DialogBottomWebBinding
+import com.example.appmoudle.googlepay.GooglePayManager
 import com.example.appmoudle.widget.RadiusWebView
 import com.lxj.xpopup.XPopup
 import com.third.libcommon.LiveEventManager
@@ -125,7 +127,7 @@ class CommonBottomWebDialog(context: Context) : BaseBottomPopupView<DialogBottom
     }
 
     override fun onDismiss() {
-        //GooglePayManager.onDestroy()
+        GooglePayManager.onDestroy()
         mAgentWebBuilder?.onDestroy()
         LiveEventManager.removeObserve(EventWeb::class.java, observer)
         super.onDismiss()
@@ -138,8 +140,11 @@ class CommonBottomWebDialog(context: Context) : BaseBottomPopupView<DialogBottom
         if (fragment == null || dialogBinding == null) return
 
         mAgentWebBuilder = AgentWebBuilder()
-        //GooglePayManager.mAgentWebBuilder = mAgentWebBuilder
-        //GooglePayManager.checkOrderCache()
+        if (webUrl.contains(WebURL.TOP_UP_PAGE_URL)) {
+            GooglePayManager.mAgentWebBuilder = mAgentWebBuilder
+            GooglePayManager.checkOrderCache()
+        }
+
 
         val webView = RadiusWebView(Utils.getApp())
         mAgentWebBuilder?.agentBuildCallBack = webCallBack

@@ -18,7 +18,7 @@ import com.example.appmoudle.config.EventKeyBoardChange
 import com.example.appmoudle.config.EventNetWorkChange
 import com.example.appmoudle.config.GlobalUserManager
 import com.example.appmoudle.databinding.ActivityMainBinding
-import com.example.appmoudle.dialog.AppConfirmPopup
+import com.example.appmoudle.dialog.CommonConfirmDialog
 import com.example.appmoudle.login.LoginF
 import com.example.appmoudle.manager.photo.PhotosSelectManager
 import com.lxj.xpopup.core.BasePopupView
@@ -155,17 +155,13 @@ class MainActivity : BaseSupportActivity<ActivityMainBinding>() {
      */
     private fun showSettingDialog() {
         dismissSettingDialog()
-        settingDialog = AppConfirmPopup.Builder(this)
-            .setContent(StringUtils.getString(R.string.hc_default_permission_denied_forever_warning))
-            .setSubmitText(StringUtils.getString(R.string.hc_word_confirm))
-            .setCancelText(StringUtils.getString(R.string.hc_word_cancel))
-            .setOnClickSubmitListener {
+        settingDialog = CommonConfirmDialog.show(context = this,
+            content = StringUtils.getString(R.string.hc_default_permission_denied_forever_warning),
+            onCancel = { finish() },
+            onConfirm = {
                 PermissionManager.isJumpFromSettingPage = true
                 PermissionUtils.launchAppDetailsSettings()
-            }
-            .setOnClickCancelListener { finish() }
-            .build()
-            .show()
+            })
     }
 
     private fun dismissSettingDialog() {

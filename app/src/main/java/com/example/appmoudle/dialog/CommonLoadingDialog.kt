@@ -3,12 +3,12 @@ package com.example.appmoudle.dialog
 import android.content.Context
 import com.example.appmoudle.R
 import com.example.appmoudle.base.BaseCenterPopupView
-import com.example.appmoudle.databinding.PopupAppLoadingViewBinding
+import com.example.appmoudle.databinding.DialogCommonLoadingBinding
 import com.lxj.xpopup.XPopup
 
-class CommonLoadingDialog(context: Context) : BaseCenterPopupView<PopupAppLoadingViewBinding>(context) {
-    override fun getViewBinding() = PopupAppLoadingViewBinding.bind(popupImplView)
-    override fun getImplLayoutId(): Int = R.layout.popup_app_loading_view
+class CommonLoadingDialog(context: Context) : BaseCenterPopupView<DialogCommonLoadingBinding>(context) {
+    override fun getViewBinding() = DialogCommonLoadingBinding.bind(popupImplView)
+    override fun getImplLayoutId(): Int = R.layout.dialog_common_loading
 
     companion object {
         fun show(context: Context?, isCancelTouchOutSide: Boolean = true): CommonLoadingDialog? {

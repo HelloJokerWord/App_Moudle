@@ -3,6 +3,7 @@ package com.example.appmoudle.simple.dialog
 import android.content.Context
 import com.example.appmoudle.R
 import com.example.appmoudle.base.BaseBottomPopupView
+import com.example.appmoudle.base.BaseFragment
 import com.example.appmoudle.databinding.LayoutSimpleBinding
 import com.lxj.xpopup.XPopup
 import com.weikaiyun.fragmentation.SupportFragment
@@ -18,7 +19,7 @@ class SimpleBottomDialog(context: Context) : BaseBottomPopupView<LayoutSimpleBin
     override fun getImplLayoutId() = R.layout.layout_simple
 
     companion object {
-        fun show(fragment: SupportFragment, onConfirm: (() -> Unit)? = null): SimpleBottomDialog? {
+        fun show(fragment: BaseFragment, onConfirm: (() -> Unit)? = null): SimpleBottomDialog? {
             fragment.context?.let {
                 val dialog = SimpleBottomDialog(it).apply {
                     this.fragment = fragment

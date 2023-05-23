@@ -11,7 +11,7 @@
     tools:bl_solid_color="#e0e0e0">
 
     <TextView
-        android:id="@+id/txtContent"
+        android:id="@+id/tvContent"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center"
@@ -33,7 +33,7 @@
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
         android:background="@color/color_white"
-        app:layout_constraintTop_toBottomOf="@+id/txtContent" />
+        app:layout_constraintTop_toBottomOf="@+id/tvContent" />
 
     <LinearLayout
         android:id="@+id/layoutBottoms"
@@ -43,7 +43,7 @@
         app:layout_constraintBottom_toBottomOf="parent">
 
         <TextView
-            android:id="@+id/txtCancel"
+            android:id="@+id/tvCancel"
             android:layout_width="0dp"
             android:layout_height="56dp"
             android:layout_weight="1"
@@ -60,7 +60,7 @@
             android:background="@color/color_white" />
 
         <TextView
-            android:id="@+id/txtSubmit"
+            android:id="@+id/tvSubmit"
             android:layout_width="0dp"
             android:layout_height="56dp"
             android:layout_weight="1"
