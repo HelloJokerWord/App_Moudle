@@ -70,7 +70,7 @@ dependencies {
     //防抖动点击 https://github.com/TaylorKunZhang/single-click
     api "cc.taylorzhang:single-click:1.1.0"
 
-    //recycleView适配器 https://github.com/CymChad/BaseRecyclerViewAdapterHelper/blob/master/readme/0-BaseRecyclerViewAdapterHelper.md
+    //recycleView适配器 https://github.com/CymChad/BaseRecyclerViewAdapterHelper
     api "com.github.CymChad:BaseRecyclerViewAdapterHelper:3.0.11"
 
     //刷新加载 https://github.com/scwang90/SmartRefreshLayout
