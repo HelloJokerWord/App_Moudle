@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    package="com.example.appmoudle">
+    xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.CAMERA" />
@@ -70,22 +69,6 @@
         android:theme="@style/MainAppTheme"
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
-
-        <!--启动组件-->
-        <provider
-            android:name="com.rousetime.android_startup.provider.StartupProvider"
-            android:authorities="${applicationId}.android_startup"
-            android:exported="false">
-
-            <meta-data
-                android:name="com.example.appmoudle.startup.StartupProviderConfig"
-                android:value="android.startup.provider.config" />
-
-            <meta-data
-                android:name="com.example.appmoudle.startup.CommonStartup"
-                android:value="android.startup" />
-
-        </provider>
 
         <!--相册选取相关-->
         <provider
