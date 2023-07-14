@@ -29,7 +29,6 @@
 |      WebURL       |    全局web页面地址    |
 |      URLApi       |    全局网络请求地址     |
 |     SocketURL     |  全局socket配置地址   |
-| EnvSwitchManager  |    全局环境配置管理     |
 
 ### 三、常用扩展函数
 
@@ -128,8 +127,16 @@ private fun stopCountDownTime() {
 |     config.gradle      |    工程配置文件     |
 | jenkins_package.gradle | jenkins打包配置文件 |
 
+### 九、相关注意，找规律
 
-
+- 文字大小用dp单位
+- view命名驼峰式
+- 图片资源和翻译以ma开头
+- 颜色以color_ + 实际颜色值
+- 请求方法都以req开头
+- MutableLiveData 命名以data结尾
+- 数据实体类以entity结尾
+- 混淆请求参数加@keep 注意是androidX的
 
 
 

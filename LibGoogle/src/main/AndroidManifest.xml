@@ -11,13 +11,18 @@
         tools:node="remove" />
 
     <application>
+
+        <!--google登陆-->
         <meta-data
             android:name="google_login_key"
             android:value="${google_login_key}" />
 
-        <meta-data
-            android:name="appsflyer_key"
-            android:value="${appsflyer_key}" />
+
+        <!--AppFlyer-->
+        <!--        <meta-data-->
+        <!--            android:name="appsflyer_key"-->
+        <!--            android:value="${appsflyer_key}" />-->
+
 
         <!-- Facebook login config-->
         <meta-data
@@ -48,7 +53,14 @@
             </intent-filter>
         </activity>
 
+        <!--twitter login-->
+        <meta-data
+            android:name="twitter_login_key"
+            android:value="${twitter_login_key}" />
 
+        <meta-data
+            android:name="twitter_login_secret"
+            android:value="${twitter_login_secret}" />
 
     </application>
 </manifest>

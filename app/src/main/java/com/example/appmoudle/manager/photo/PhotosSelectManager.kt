@@ -11,6 +11,7 @@ import android.util.Log
 import android.widget.ImageView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
+import com.blankj.utilcode.constant.PermissionConstants
 import com.blankj.utilcode.util.ColorUtils
 import com.blankj.utilcode.util.ToastUtils
 import com.blankj.utilcode.util.Utils
@@ -67,13 +68,13 @@ object PhotosSelectManager {
 
     private val selectorStyle = PictureSelectorStyle()
 
-    var selectResult: ((data: MutableList<PhotoBean>) -> Unit)? = null
+    var selectResult: ((data: MutableList<PhotoBean>, lastSelect: MutableList<LocalMedia>) -> Unit)? = null
 
     private val callResult by lazy {
         object : OnResultCallbackListener<LocalMedia> {
             override fun onResult(result: ArrayList<LocalMedia>?) {
                 if (result.isNullOrEmpty()) {
-                    selectResult?.invoke(mutableListOf())
+                    selectResult?.invoke(mutableListOf(), mutableListOf())
                     return
                 }
                 try {
@@ -82,7 +83,7 @@ object PhotosSelectManager {
                         if (media.width == 0 || media.height == 0) {
                             when {
                                 PictureMimeType.isHasImage(media.mimeType) -> {
-                                    val imageExtraInfo = MediaUtils.getImageSize(Utils.getApp(), media.cutPath)
+                                    val imageExtraInfo = MediaUtils.getImageSize(Utils.getApp(), media.realPath)
                                     media.width = imageExtraInfo.width
                                     media.height = imageExtraInfo.height
                                 }
@@ -96,34 +97,29 @@ object PhotosSelectManager {
                         }
 
                         Log.i(
-                            TAG, "\n文件名: ${media.fileName} " +
-                                    "是否压缩:${media.isCompressed} " +
-                                    "压缩:${media.compressPath} " +
-                                    "初始路径:${media.path} " +
-                                    "绝对路径:${media.realPath} " +
-                                    "是否裁剪:${media.isCut}\n " +
-                                    "裁剪路径:${media.cutPath} " +
-                                    "是否开启原图:${media.isOriginal} " +
-                                    "原图路径:${media.originalPath} " +
-                                    "沙盒路径:${media.sandboxPath} " +
-                                    "水印路径:${media.watermarkPath} " +
-                                    "视频缩略图:${media.videoThumbnailPath}\n" +
-                                    "原始宽高:${media.width} x ${media.height} " +
-                                    "裁剪宽高:${media.cropImageWidth} x ${media.cropImageHeight} " +
-                                    "文件大小:${PictureFileUtils.formatAccurateUnitFileSize(media.size)} " +
-                                    "文件时长:${media.duration} "
+                            TAG, "\n文件名: ${media.fileName}" +
+                                    "\n是否压缩:${media.isCompressed}" +
+                                    "\n压缩:${media.compressPath}" +
+                                    "\n初始路径:${media.path}" +
+                                    "\n绝对路径:${media.realPath}" +
+                                    "\n是否裁剪:${media.isCut}" +
+                                    "\n裁剪路径:${media.cutPath}" +
+                                    "\n是否开启原图:${media.isOriginal}" +
+                                    "\n原图路径:${media.originalPath}" +
+                                    "\n沙盒路径:${media.sandboxPath}" +
+                                    "\n水印路径:${media.watermarkPath}" +
+                                    "\n视频缩略图:${media.videoThumbnailPath}" +
+                                    "\n原始宽高:${media.width} x ${media.height}" +
+                                    "\n裁剪宽高:${media.cropImageWidth} x ${media.cropImageHeight}" +
+                                    "\n文件大小:${PictureFileUtils.formatAccurateUnitFileSize(media.size)}" +
+                                    "\n文件时长:${media.duration}"
                         )
 
-                        pathList.add(PhotoBean(media.cutPath, File(media.cutPath), media.width, media.height))
+                        pathList.add(PhotoBean(media.realPath, File(media.realPath), media.width, media.height))
                     }
-                    if (pathList.isEmpty()) {
-                        ToastUtils.showShort(R.string.hc_common_error_tips)
-                        return
-                    }
-                    selectResult?.invoke(pathList)
+                    selectResult?.invoke(pathList, result.toMutableList())
                 } catch (e: Exception) {
                     e.printStackTrace()
-                    ToastUtils.showShort(R.string.hc_common_error_tips)
                 }
             }
 
@@ -136,39 +132,45 @@ object PhotosSelectManager {
     /**
      * 打开相机拍照获取
      */
-    fun openCamera(activity: FragmentActivity?, result: (data: MutableList<PhotoBean>) -> Unit) {
+    fun openCamera(activity: FragmentActivity?, result: (data: MutableList<PhotoBean>, lastSelect: MutableList<LocalMedia>) -> Unit) {
         if (activity == null) return
-        PermissionManager.checkCameraPermission(activity, mOnGranted = {
+        PermissionManager.checkPermission(activity, arrayOf(PermissionConstants.CAMERA), mOnGranted = {
             selectResult = result
 
             PictureSelector.create(activity)
                 .openCamera(SelectMimeType.ofImage())
                 .setCameraInterceptListener(MeOnCameraInterceptListener())
-                .setCropEngine(ImageFileCropEngine())
+                //.setCropEngine(ImageFileCropEngine())
                 .setCompressEngine(ImageFileCompressEngine())
                 .setSelectLimitTipsListener(MeOnSelectLimitTipsListener())
                 //.setCustomLoadingListener(getCustomLoadingListener())
-                .setDefaultLanguage(LanguageConfig.TRADITIONAL_CHINESE)
+                .setDefaultLanguage(LanguageConfig.ENGLISH)
                 .setSandboxFileEngine(MeSandboxFileEngine())
                 .isOriginalControl(true)
                 .setPermissionDescriptionListener(MeOnPermissionDescriptionListener())
                 .forResult(callResult)
-        })
+        }, mOnDenied = { _, _, _ -> })
     }
 
     /**
      * 打开相册获取
      */
-    fun openAlbum(activity: FragmentActivity?, result: (data: MutableList<PhotoBean>) -> Unit) {
+    fun openAlbum(
+        activity: FragmentActivity?,
+        isSingle: Boolean = false,
+        maxSelectNum: Int = 10,
+        lastSelect: MutableList<LocalMedia> = mutableListOf(),
+        result: (data: MutableList<PhotoBean>, lastSelect: MutableList<LocalMedia>) -> Unit
+    ) {
         if (activity == null) return
-        PermissionManager.checkPhotoPermission(activity, mOnGranted = {
+        PermissionManager.checkPermission(activity, arrayOf(PermissionConstants.CAMERA), mOnGranted = {
             selectResult = result
 
             PictureSelector.create(activity)
                 .openGallery(SelectMimeType.ofImage())
                 .setSelectorUIStyle(selectorStyle)
                 .setImageEngine(PhotoSelectGlideEngine.createGlideEngine())
-                .setCropEngine(ImageFileCropEngine())
+                //.setCropEngine(ImageFileCropEngine())
                 .setCompressEngine(ImageFileCompressEngine())
                 .setSandboxFileEngine(MeSandboxFileEngine())
                 .setCameraInterceptListener(MeOnCameraInterceptListener())
@@ -179,9 +181,12 @@ object PhotosSelectManager {
                 .setPermissionDeniedListener(MeOnPermissionDeniedListener())
                 .isPageSyncAlbumCount(true)
                 //.setCustomLoadingListener(getCustomLoadingListener())
-                .setQueryFilterListener { false }
-                .setSelectionMode(SelectModeConfig.SINGLE)
-                .setDefaultLanguage(LanguageConfig.TRADITIONAL_CHINESE)
+                .setSelectedData(lastSelect)
+                .setQueryFilterListener {
+                    it.realPath.endsWith(".tiff") || it.realPath.endsWith(".svg")
+                }
+                .setSelectionMode(if (isSingle) SelectModeConfig.SINGLE else SelectModeConfig.MULTIPLE)
+                .setDefaultLanguage(LanguageConfig.ENGLISH)
                 .setQuerySortOrder(MediaStore.MediaColumns.DATE_MODIFIED + " ASC")
                 .setOutputCameraDir(GlobalPath.CAMERA_OUT_PUT)
                 .setQuerySandboxDir(GlobalPath.CAMERA_OUT_PUT)
@@ -198,11 +203,15 @@ object PhotosSelectManager {
                 .isPreviewImage(true)
                 .isMaxSelectEnabledMask(false)
                 .isDirectReturnSingle(false)
-                .setMaxSelectNum(1)
+                .setMaxSelectNum(maxSelectNum)
                 .setRecyclerAnimationMode(AnimationType.DEFAULT_ANIMATION)
                 .isGif(false)
                 .forResult(callResult)
-        })
+        }, mOnDenied = { _, _, _ -> })
+    }
+
+    fun onRelease() {
+        selectResult = null
     }
 
     /**
@@ -346,17 +355,17 @@ object PhotosSelectManager {
             if (context == null || media == null || config == null) return false
             when (limitType) {
                 SelectLimitType.SELECT_MIN_SELECT_LIMIT -> {
-                    ToastUtils.showShort("图片最少不能低于" + config.minSelectNum + "张")
+                    ToastUtils.showShort(R.string.ma_tips_not_less_pic, config.minSelectNum)
                     return true
                 }
 
                 SelectLimitType.SELECT_MIN_VIDEO_SELECT_LIMIT -> {
-                    ToastUtils.showShort("视频最少不能低于" + config.minVideoSelectNum + "个")
+                    ToastUtils.showShort(R.string.ma_tips_not_less_video, config.minVideoSelectNum)
                     return true
                 }
 
                 SelectLimitType.SELECT_MIN_AUDIO_SELECT_LIMIT -> {
-                    ToastUtils.showShort("音频最少不能低于" + config.minAudioSelectNum + "个")
+                    ToastUtils.showShort(R.string.ma_tips_not_less_audio, config.minAudioSelectNum)
                     return true
                 }
             }

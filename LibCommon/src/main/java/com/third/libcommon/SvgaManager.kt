@@ -39,7 +39,11 @@ object SvgaManager {
     }
 
     fun startPageLoading(svgaImageView: SVGAImageView?) {
-        decodeFromAssets(svgaImageView, "svga/common_page_loading.svga")
+        decodeFromAssets(svgaImageView, "svga/common_loading_refresh.svga")
+    }
+
+    fun startGuide(svgaImageView: SVGAImageView?) {
+        decodeFromAssets(svgaImageView, "svga/start_guide.svga")
     }
 
     /**
@@ -161,5 +165,9 @@ object SvgaManager {
             stopAnimation(true)
             visibility = View.GONE
         }
+    }
+
+    fun onRelease() {
+        mapSVGAVideoEntity.clear()
     }
 }

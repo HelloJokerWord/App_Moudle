@@ -45,6 +45,10 @@ dependencies {
     api "androidx.viewpager2:viewpager2:${rootProject.version_viewpager2}"
     api "androidx.recyclerview:recyclerview:${rootProject.version_recyclerview}"
     api "androidx.multidex:multidex:${rootProject.version_multidex}"
+    api "androidx.exifinterface:exifinterface:${rootProject.version_exifinterface}"
+    api "androidx.transition:transition:${rootProject.version_transition}"
+    api "androidx.activity:activity:${rootProject.version_activity}"
+    api "androidx.concurrent:concurrent-futures:${rootProject.version_concurrent_futures}"
 
     api "com.google.android.material:material:${rootProject.version_material}"
     api "com.google.code.gson:gson:${rootProject.version_gson}"
@@ -94,12 +98,6 @@ dependencies {
     kapt "com.github.bumptech.glide:compiler:$version_glide"
     api 'jp.wasabeef:glide-transformations:4.3.0'
 
-    //图片选择器 https://github.com/LuckSiege/PictureSelector/blob/version_component/README_CN.md
-    //noinspection GradleDependency
-    api "io.github.lucksiege:pictureselector:$version_pic_select"
-    api "io.github.lucksiege:ucrop:$version_pic_select"      //图片裁剪
-    api "io.github.lucksiege:camerax:$version_pic_select"    //自定义相机
-
     //luban图片压缩 https://github.com/Curzibn/Luban/tree/turbo
     api "top.zibin:Luban-turbo:1.0.0"
 
@@ -109,24 +107,14 @@ dependencies {
     //rxjava
     api "io.reactivex.rxjava3:rxjava:$version_rxjava"
     api "io.reactivex.rxjava3:rxandroid:$version_rxandroid"
-    api 'com.github.liujingxing.rxlife:rxlife-rxjava3:2.2.2' //管理RxJava3生命周期，页面销毁，关闭请求
 
-    //网络请求 https://github.com/liujingxing/rxhttp/blob/master/README_zh.md
-    //noinspection GradleDependency
-    api "com.squareup.okhttp3:okhttp:$version_rxhttp"
-    api "com.github.liujingxing.rxhttp:rxhttp:$version_rxhttp"
-    kapt "com.github.liujingxing.rxhttp:rxhttp-compiler:$version_rxhttp"
+    //okhttp
+    api "com.squareup.okhttp3:okhttp:4.11.0"
 
     //websocket https://github.com/TooTallNate/Java-WebSocket
     api 'org.java-websocket:Java-WebSocket:1.5.3'
+
+    //heic转格式 https://github.com/lincollincol/HEIF-converter/tree/master
+    api 'com.github.lincollincol:HEIF-converter:1.6'
 }
 
-/**
- * 网络请求库需要添加
- */
-kapt {
-    arguments {
-        //依赖了RxJava时，rxhttp_rxjava参数为必须，传入RxJava版本号
-        arg("rxhttp_rxjava", "$version_rxjava")
-    }
-}

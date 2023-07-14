@@ -11,6 +11,7 @@
     <application>
         <activity
             android:name=".view.ImagePreviewActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/Theme.ImagePreview" />
     </application>
 </manifest>

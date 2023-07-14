@@ -51,16 +51,20 @@ public final class AgentActionFragment extends Fragment {
     public static final String FRAGMENT_TAG = "AgentWebActionFragment";
 
     public static void start(Activity activity, Action action) {
-        FragmentActivity fragmentActivity = (FragmentActivity) activity;
-        FragmentManager fragmentManager = fragmentActivity.getSupportFragmentManager();
-        AgentActionFragment fragment = (AgentActionFragment) fragmentManager.findFragmentByTag(FRAGMENT_TAG);
-        if (fragment == null) {
-            fragment = new AgentActionFragment();
-            fragmentManager.beginTransaction().add(fragment, FRAGMENT_TAG).commitAllowingStateLoss();
-        }
-        fragment.mAction = action;
-        if (fragment.isViewCreated) {
-            fragment.runAction();
+        try {
+            FragmentActivity fragmentActivity = (FragmentActivity) activity;
+            FragmentManager fragmentManager = fragmentActivity.getSupportFragmentManager();
+            AgentActionFragment fragment = (AgentActionFragment) fragmentManager.findFragmentByTag(FRAGMENT_TAG);
+            if (fragment == null) {
+                fragment = new AgentActionFragment();
+                fragmentManager.beginTransaction().add(fragment, FRAGMENT_TAG).commitAllowingStateLoss();
+            }
+            fragment.mAction = action;
+            if (fragment.isViewCreated) {
+                fragment.runAction();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -69,7 +73,7 @@ public final class AgentActionFragment extends Fragment {
     }
 
     private void resetAction() {
-//        mAction = null;
+        //        mAction = null;
     }
 
     private boolean isViewCreated = false;
@@ -95,21 +99,25 @@ public final class AgentActionFragment extends Fragment {
             resetAction();
             return;
         }
-        if (mAction.getAction() == Action.ACTION_PERMISSION) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                requestPermission(mAction);
-            } else {
-                resetAction();
-            }
-        } else if (mAction.getAction() == Action.ACTION_CAMERA) {
-            captureCamera();
-        } else if (mAction.getAction() == Action.ACTION_VIDEO) {
-            recordVideo();
-        } else {
-            choose();
+        switch (mAction.getAction()) {
+            case Action.ACTION_PERMISSION:
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    requestPermission(mAction);
+                } else {
+                    resetAction();
+                }
+                break;
+            case Action.ACTION_CAMERA:
+                captureCamera();
+                break;
+            case Action.ACTION_VIDEO:
+                recordVideo();
+                break;
+            default:
+                choose();
+                break;
         }
     }
-
 
 
     private void choose() {

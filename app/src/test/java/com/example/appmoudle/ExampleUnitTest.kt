@@ -23,4 +23,9 @@ class ExampleUnitTest {
         }
         println(s)
     }
+
+    @Test
+    fun test2(){
+    }
+
 }

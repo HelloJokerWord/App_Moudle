@@ -4,6 +4,7 @@ plugins {
     id 'kotlin-parcelize'
     id 'kotlin-kapt'
     id 'com.google.gms.google-services'
+    id 'bugly'
 }
 
 apply from: 'jenkins_package.gradle'
@@ -30,7 +31,7 @@ android {
         }
 
         //apk包只加入支持的语言
-        //resConfigs 'zh-rTW', 'zh-rSG', 'zh-rMO', 'zh-rCN', 'ms-rMY', 'zh-rHK'
+        resConfigs 'en'
 
         flavorDimensions "channel"
 
@@ -145,13 +146,24 @@ dependencies {
     implementation(project(":LibAgentwebCore"))
     implementation(project(":LibAgentwebFileChooser"))
     implementation(project(":LibGoogle"))
+    implementation(project(":LibHttp"))
+    implementation(project(":LibWeight"))
+
+    //图片选择器 https://github.com/LuckSiege/PictureSelector/blob/version_component/README_CN.md
+    implementation(project(":LibCamerax"))
+    implementation(project(":LibSelector"))
+    implementation(project(":LibUcrop"))
 
     //objectBox数据库 https://docs.objectbox.io/getting-started
     debugImplementation "io.objectbox:objectbox-android-objectbrowser:${rootProject.version_object_box}"
     releaseImplementation "io.objectbox:objectbox-android:${rootProject.version_object_box}"
     implementation "io.objectbox:objectbox-kotlin:${rootProject.version_object_box}"
 
-    //debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.10'
+    //debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.12'
+
+    //BugLy奔溃
+    implementation 'com.tencent.bugly:crashreport:4.1.9.2'
+    implementation 'com.tencent.bugly:nativecrashreport:3.9.2'
 
 }
 

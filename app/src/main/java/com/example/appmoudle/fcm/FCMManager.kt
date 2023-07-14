@@ -10,16 +10,16 @@ import com.blankj.utilcode.util.AppUtils
 import com.blankj.utilcode.util.NotificationUtils
 import com.blankj.utilcode.util.TimeUtils
 import com.example.appmoudle.R
-import com.example.appmoudle.config.GlobalUserManager
+import com.example.appmoudle.global.GlobalUserManager
 import com.example.appmoudle.main.MainActivity
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.messaging.FirebaseMessaging
 import com.google.firebase.messaging.ktx.messaging
+import com.libhttp.HttpManager
+import com.libhttp.RequestCallBack
+import com.libhttp.URLApi
 import com.third.libcommon.extension.fromJson
-import com.third.libcommon.http.HttpManager
-import com.third.libcommon.http.RequestCallBack
-import com.third.libcommon.http.URLApi
 
 
 /**

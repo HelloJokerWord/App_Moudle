@@ -24,7 +24,7 @@ class WearAvatarResManager : BaseResManager() {
 
     override fun getFileName(resUrl: String?): String = "wear_avatar_${EncryptUtils.encryptMD5ToString(resUrl)}"
 
-    override fun getRootPath(): String = GlobalPath.WEAR_AVATAR_SVGA
+    override fun getRootPath(): String = GlobalPath.IMAGE_DOWNLOAD
 
     override fun getResPath(resUrl: String?): String = "${getRootPath()}${getFileName(resUrl)}"
 

@@ -5,6 +5,7 @@ import android.net.Uri
 import android.text.TextUtils
 import android.util.Log
 import com.blankj.utilcode.util.FileUtils
+import com.third.libcommon.constant.GlobalPath
 import top.zibin.luban.Luban
 import top.zibin.luban.OnCompressListener
 import java.io.File
@@ -23,48 +24,62 @@ object LubanManager {
     /**
      * 压缩图片文件
      * @param oriFile       原图文件
-     * @param targetPath    压缩后图片路径 一般用默认路径
      *
      */
-    fun compress(context: Context?, oriFile: File?, targetPath: String?, result: (file: File?) -> Unit) {
-        if (context == null || oriFile == null) {
+    fun compress(context: Context?, oriFile: File?, result: (file: File?) -> Unit) {
+        if (context == null || !FileUtils.isFileExists(oriFile)) {
             result.invoke(null)
             return
         }
 
         Log.i(TAG, "压缩前 onStart oriFileSize=${FileUtils.getSize(oriFile)} threat=${Thread.currentThread().name}")
-        launchCompress(Luban.with(context).load(oriFile), targetPath, result)
+        launchCompress(Luban.with(context).load(oriFile), result)
     }
 
-    fun compress(context: Context?, oriFilePath: String?, targetPath: String?, result: (file: File?) -> Unit) {
-        if (context == null || oriFilePath.isNullOrEmpty()) {
+    fun compress(context: Context?, oriFilePath: String?, result: (file: File?) -> Unit) {
+        if (context == null || !FileUtils.isFileExists(oriFilePath)) {
             result.invoke(null)
             return
         }
 
-        Log.i(TAG, "压缩前 onStart oriFileSize=${FileUtils.getSize(oriFilePath)} threat=${Thread.currentThread().name}")
-        launchCompress(Luban.with(context).load(oriFilePath), targetPath, result)
+        Log.i(TAG, "压缩前 onStart oriFilePath=${oriFilePath} oriFileSize=${FileUtils.getSize(oriFilePath)} threat=${Thread.currentThread().name}")
+        launchCompress(Luban.with(context).load(oriFilePath), result)
     }
 
-    fun compress(context: Context?, oriFileUri: Uri?, targetPath: String?, result: (file: File?) -> Unit) {
+    fun compress(context: Context?, oriFileUri: Uri?, result: (file: File?) -> Unit) {
         if (context == null || oriFileUri == null) {
             result.invoke(null)
             return
         }
 
-        Log.i(TAG, "压缩前 onStart oriFileSize=${FileUtils.getSize(oriFileUri.path)} threat=${Thread.currentThread().name}")
-        launchCompress(Luban.with(context).load(oriFileUri), targetPath, result)
+        Log.i(TAG, "压缩前 onStart oriFileSize=${FileUtils.getSize(oriFileUri.toString())} threat=${Thread.currentThread().name}")
+        launchCompress(Luban.with(context).load(oriFileUri), result)
     }
 
-    private fun launchCompress(builder: Luban.Builder, targetPath: String?, result: (file: File?) -> Unit) {
-        builder.ignoreBy(50) //单位k
-            .setTargetDir(targetPath)
-            .filter { path -> !(TextUtils.isEmpty(path) || path.lowercase(Locale.getDefault()).endsWith(".gif")) }
+    private fun launchCompress(builder: Luban.Builder, result: (file: File?) -> Unit) {
+        builder.ignoreBy(2000)
+            .setTargetDir(GlobalPath.getLubanTargetPath())
+//            .setFocusAlpha(false)
+            .filter { path ->
+                !(TextUtils.isEmpty(path)
+                        || path.lowercase(Locale.getDefault()).endsWith(".gif")
+                        || path.lowercase(Locale.getDefault()).endsWith(".tiff"))
+            }
+//            .setRenameListener { filePath ->
+//                try {
+//                    val md = MessageDigest.getInstance("MD5")
+//                    md.update(filePath.toByteArray())
+//                    return@setRenameListener BigInteger(1, md.digest()).toString(32)
+//                } catch (e: NoSuchAlgorithmException) {
+//                    e.printStackTrace()
+//                }
+//                return@setRenameListener ""
+//            }
             .setCompressListener(object : OnCompressListener {
                 override fun onStart() {}
 
                 override fun onSuccess(file: File?) {
-                    Log.i(TAG, "压缩后 path=${file?.path}  targetSize=${FileUtils.getSize(file)}  threat=${Thread.currentThread().name}")
+                    Log.i(TAG, "压缩后 path=${file?.absolutePath}  targetSize=${FileUtils.getSize(file)}  threat=${Thread.currentThread().name}")
                     result.invoke(file)
                 }
 
@@ -75,4 +90,6 @@ object LubanManager {
             })
             .launch()
     }
+
+
 }

@@ -4,6 +4,8 @@ import android.content.Context
 import android.graphics.drawable.Drawable
 import android.widget.ImageView
 import androidx.annotation.ColorInt
+import androidx.annotation.DrawableRes
+import com.blankj.utilcode.util.FileUtils
 import com.blankj.utilcode.util.SizeUtils
 import com.bumptech.glide.Glide
 import com.bumptech.glide.Priority
@@ -37,15 +39,55 @@ object GlideManager {
      * 加载图片(默认)
      *
      * @param context   上下文
-     * @param url       链接
+     * @param url       链接 或 本地文件路径 或 asset路径
      * @param imageView ImageView
      */
     fun loadImage(context: Context?, url: String?, imageView: ImageView?) {
         if (context == null || url.isNullOrEmpty() || imageView == null) return
 
-        val options = RequestOptions().placeholder(placeholderImage)   //占位图
+        val options = RequestOptions()
+            .placeholder(placeholderImage)   //占位图
             .error(errorImage)               //错误图
         Glide.with(context).load(url).apply(options).into(imageView)
+    }
+
+    /**
+     * 加载本地路径文件
+     * @param path 文件路径
+     */
+    fun loadImageLocal(context: Context?, path: String?, imageView: ImageView?) {
+        if (context == null || !FileUtils.isFileExists(path) || imageView == null) return
+
+        val options = RequestOptions()
+            .placeholder(placeholderImage)   //占位图
+            .error(errorImage)               //错误图
+        Glide.with(context).load(path).apply(options).into(imageView)
+    }
+
+    /**
+     * 加载本地路径文件
+     * @param file 文件
+     */
+    fun loadImageFile(context: Context?, file: File?, imageView: ImageView?) {
+        if (context == null || !FileUtils.isFileExists(file) || imageView == null) return
+
+        val options = RequestOptions()
+            .placeholder(placeholderImage)   //占位图
+            .error(errorImage)               //错误图
+        Glide.with(context).load(file).apply(options).into(imageView)
+    }
+
+    /**
+     * 加载本地路径文件
+     * @param drawableId 资源id
+     */
+    fun loadImageDrawableId(context: Context?, @DrawableRes drawableId: Int, imageView: ImageView?) {
+        if (context == null || drawableId == 0 || imageView == null) return
+
+        val options = RequestOptions()
+            .placeholder(placeholderImage)   //占位图
+            .error(errorImage)               //错误图
+        Glide.with(context).load(drawableId).apply(options).into(imageView)
     }
 
     /**
@@ -62,9 +104,11 @@ object GlideManager {
     fun loadImageSize(context: Context?, url: String?, imageView: ImageView?, width: Int, height: Int) {
         if (context == null || url.isNullOrEmpty() || imageView == null) return
 
-        val options = RequestOptions().placeholder(placeholderImage) //占位图
+        val options = RequestOptions()
+            .placeholder(placeholderImage) //占位图
             .error(errorImage) //错误图
-            .override(width, height).priority(Priority.HIGH)
+            .override(width, height)
+            .priority(Priority.HIGH)
         Glide.with(context).load(url).apply(options).into(imageView)
     }
 
@@ -86,7 +130,8 @@ object GlideManager {
     fun loadImageSizeKipMemoryCache(context: Context?, url: String?, imageView: ImageView?) {
         if (context == null || url.isNullOrEmpty() || imageView == null) return
 
-        val options = RequestOptions().placeholder(placeholderImage)   //占位图
+        val options = RequestOptions()
+            .placeholder(placeholderImage)   //占位图
             .error(errorImage)               //错误图
             .skipMemoryCache(true)      //禁用掉Glide的内存缓存功能
         Glide.with(context).load(url).apply(options).into(imageView)
@@ -115,7 +160,9 @@ object GlideManager {
     fun loadCircleImage(context: Context?, url: String?, imageView: ImageView?) {
         if (context == null || url.isNullOrEmpty() || imageView == null) return
 
-        val options = RequestOptions().centerCrop().circleCrop() //设置圆形
+        val options = RequestOptions()
+            .centerCrop()
+            .circleCrop() //设置圆形
             .placeholder(placeholderImage) //占位图
             .error(errorImage) //错误图
             .priority(Priority.HIGH)
@@ -136,9 +183,11 @@ object GlideManager {
 
         val options = RequestOptions.bitmapTransform(
             MultiTransformation(
-                CenterCrop(), CropCircleWithBorderTransformation(SizeUtils.px2dp(borderSize), borderColor)
+                CenterCrop(),
+                CropCircleWithBorderTransformation(SizeUtils.dp2px(borderSize), borderColor)
             )
-        ).placeholder(placeholderImage)  //占位图
+        )
+            .placeholder(placeholderImage)  //占位图
             .error(errorImage)              //错误图
         Glide.with(context).load(url).apply(options).into(imageView)
     }
@@ -151,14 +200,40 @@ object GlideManager {
      * @param imageView ImageView
      * @param radius    圆角 px
      */
-    fun loadRoundCircleImage(context: Context?, url: String?, imageView: ImageView?, radius: Float) {
+    fun loadRoundCircleImage(context: Context?, url: String?, imageView: ImageView?, radius: Float, @DrawableRes placeholder: Int = placeholderImage, @DrawableRes error: Int = errorImage) {
         if (context == null || url.isNullOrEmpty() || imageView == null) return
 
-        val options = RequestOptions
-            .bitmapTransform(MultiTransformation(CenterCrop(), RoundedCornersTransformation(SizeUtils.px2dp(radius), 0, CornerType.ALL)))
+        val options = RequestOptions.bitmapTransform(
+            MultiTransformation(
+                CenterCrop(),
+                RoundedCornersTransformation(SizeUtils.dp2px(radius), 0, CornerType.ALL)
+            )
+        )
+            .placeholder(placeholder) //占位图
+            .error(error) //错误图
+        Glide.with(context).load(url).apply(options).into(imageView)
+    }
+
+    /**
+     * 加载圆角图片
+     *
+     * @param context   上下文
+     * @param path       文件路径
+     * @param imageView ImageView
+     * @param radius    圆角 px
+     */
+    fun loadRoundCircleImageLocal(context: Context?, path: String?, imageView: ImageView?, radius: Float) {
+        if (context == null || !FileUtils.isFileExists(path) || imageView == null) return
+
+        val options = RequestOptions.bitmapTransform(
+            MultiTransformation(
+                CenterCrop(),
+                RoundedCornersTransformation(SizeUtils.dp2px(radius), 0, CornerType.ALL)
+            )
+        )
             .placeholder(placeholderImage) //占位图
             .error(errorImage) //错误图
-        Glide.with(context).load(url).apply(options).into(imageView)
+        Glide.with(context).load(path).apply(options).into(imageView)
     }
 
     /**
@@ -173,8 +248,12 @@ object GlideManager {
     fun loadRoundCircleImage(context: Context?, url: String?, imageView: ImageView?, radius: Float, type: CornerType?) {
         if (context == null || url.isNullOrEmpty() || imageView == null) return
 
-        val options = RequestOptions
-            .bitmapTransform(MultiTransformation(CenterCrop(), RoundedCornersTransformation(SizeUtils.px2dp(radius), 0, type)))
+        val options = RequestOptions.bitmapTransform(
+            MultiTransformation(
+                CenterCrop(),
+                RoundedCornersTransformation(SizeUtils.dp2px(radius), 0, type)
+            )
+        )
             .placeholder(placeholderImage) //占位图
             .error(errorImage) //错误图
         Glide.with(context).load(url).apply(options).into(imageView)
@@ -191,8 +270,12 @@ object GlideManager {
     fun loadBlurImage(context: Context?, url: String?, imageView: ImageView?, blur: Int) {
         if (context == null || url.isNullOrEmpty() || imageView == null) return
 
-        val options = RequestOptions
-            .bitmapTransform(MultiTransformation(CenterCrop(), BlurTransformation(blur)))
+        val options = RequestOptions.bitmapTransform(
+            MultiTransformation(
+                CenterCrop(),
+                BlurTransformation(blur)
+            )
+        )
             .placeholder(placeholderImage) //占位图
             .error(errorImage) //错误图
         Glide.with(context).load(url).apply(options).into(imageView)
@@ -210,8 +293,12 @@ object GlideManager {
     fun loadBlurImage(context: Context?, url: String?, imageView: ImageView?, blur: Int, sampling: Int) {
         if (context == null || url.isNullOrEmpty() || imageView == null) return
 
-        val options = RequestOptions
-            .bitmapTransform(MultiTransformation(CenterCrop(), BlurTransformation(blur, sampling)))
+        val options = RequestOptions.bitmapTransform(
+            MultiTransformation(
+                CenterCrop(),
+                BlurTransformation(blur, sampling)
+            )
+        )
             .placeholder(placeholderImage) //占位图
             .error(errorImage) //错误图
         Glide.with(context).load(url).apply(options).into(imageView)
@@ -227,8 +314,12 @@ object GlideManager {
     fun loadBlackImage(context: Context?, url: String?, imageView: ImageView?) {
         if (context == null || url.isNullOrEmpty() || imageView == null) return
 
-        val options = RequestOptions
-            .bitmapTransform(MultiTransformation(CenterCrop(), GrayscaleTransformation()))
+        val options = RequestOptions.bitmapTransform(
+            MultiTransformation(
+                CenterCrop(),
+                GrayscaleTransformation()
+            )
+        )
             .placeholder(placeholderImage) //占位图
             .error(errorImage) //错误图
         Glide.with(context).load(url).apply(options).into(imageView)

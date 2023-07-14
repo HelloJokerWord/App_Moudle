@@ -5,7 +5,7 @@ import android.util.Log
 import android.webkit.JavascriptInterface
 import android.webkit.WebView
 import com.blankj.utilcode.util.ToastUtils
-import com.example.appmoudle.config.EventWeb
+import com.example.appmoudle.global.EventWeb
 import com.third.libcommon.LiveEventManager
 import org.json.JSONObject
 

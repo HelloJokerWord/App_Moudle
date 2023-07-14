@@ -4,7 +4,7 @@ import android.text.TextUtils
 import cc.shinichi.library.glide.SSLSocketClient
 import cc.shinichi.library.glide.progress.ProgressResponseBody.InternalProgressListener
 import okhttp3.OkHttpClient
-import java.util.*
+import java.util.Collections
 import java.util.concurrent.TimeUnit
 
 /**
@@ -37,12 +37,8 @@ object ProgressManager {
             builder.addNetworkInterceptor { chain ->
                 val request = chain.request()
                 val response = chain.proceed(request)
-                response.newBuilder()
-                    .body(response.body()?.let { ProgressResponseBody(request.url().toString(), LISTENER, it) })
-                    .build()
-            }
-                .sslSocketFactory(SSLSocketClient.sSLSocketFactory, SSLSocketClient.geX509tTrustManager())
-                .hostnameVerifier(SSLSocketClient.hostnameVerifier)
+                response.newBuilder().body(response.body?.let { ProgressResponseBody(request.url.toString(), LISTENER, it) }).build()
+            }.sslSocketFactory(SSLSocketClient.sSLSocketFactory, SSLSocketClient.geX509tTrustManager()).hostnameVerifier(SSLSocketClient.hostnameVerifier)
             builder.connectTimeout(30, TimeUnit.SECONDS)
             builder.writeTimeout(30, TimeUnit.SECONDS)
             builder.readTimeout(30, TimeUnit.SECONDS)

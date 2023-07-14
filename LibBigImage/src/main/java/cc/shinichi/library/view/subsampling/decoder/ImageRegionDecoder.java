@@ -44,8 +44,7 @@ public interface ImageRegionDecoder {
      * See {@link SkiaImageRegionDecoder} and {@link SkiaPooledImageRegionDecoder} for examples of
      * internal locking and synchronization.
      * </p>
-     *
-     * @param sRect      Source image rectangle to decode.
+     * @param sRect Source image rectangle to decode.
      * @param sampleSize Sample size.
      * @return The decoded region. It is safe to return null if decoding fails.
      */
@@ -54,7 +53,6 @@ public interface ImageRegionDecoder {
 
     /**
      * Status check. Should return false before initialisation and after recycle.
-     *
      * @return true if the decoder is ready to be used.
      */
     boolean isReady();

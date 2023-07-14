@@ -2,8 +2,6 @@
 
 import androidx.lifecycle.LifecycleOwner
 import com.example.appmoudle.database.db.TraceDB
-import com.third.libcommon.http.HttpManager
-import com.third.libcommon.http.RequestCallBack
 
 /**
  * CreateBy:Joker
@@ -23,17 +21,7 @@ class TraceHelp {
         TraceDB.instance.getBuriedList("") { list ->
             if (list.isNullOrEmpty()) return@getBuriedList
             //查询成功
-            HttpManager.postBody(owner, "", mutableMapOf("list" to list), object : RequestCallBack<String?> {
-                override fun onSuccess(data: String?) {
-                    TraceDB.instance.remove(list) {
-                        //删除成功
-                    }
-                }
 
-                override fun onFail(code: Int, msg: String?) {
-
-                }
-            })
         }
     }
 

@@ -13,7 +13,8 @@ import com.google.android.gms.auth.api.signin.GoogleSignInStatusCodes
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.GoogleApiAvailability
 import com.google.android.gms.common.api.ApiException
-import com.libgoogle.login.entity.GoogleSignInAccountEntity
+import com.libgoogle.login.entity.LoginResultEntity
+import com.third.libcommon.constant.GlobalConstant
 
 
 /**
@@ -28,19 +29,20 @@ object GoogleLoginManager {
     @SuppressLint("StaticFieldLeak")
     private var mGoogleSignInClient: GoogleSignInClient? = null
 
-    private const val REQUEST_CODE_ERROR_DIALOG = 200
-
     /**
      * 初始化google凭证
      */
     fun init(activity: Activity) {
-        val key = MetaDataUtils.getMetaDataInApp("google_login_key")
-        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-            .requestEmail()
-            .requestProfile()
-            .requestIdToken(key)
-            .build()
-        mGoogleSignInClient = GoogleSignIn.getClient(activity, gso)
+        if (mGoogleSignInClient == null) {
+            val key = MetaDataUtils.getMetaDataInApp("google_login_key")
+            val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestEmail()
+                .requestProfile()
+                .requestIdToken(key)
+                .requestServerAuthCode(key)
+                .build()
+            mGoogleSignInClient = GoogleSignIn.getClient(activity, gso)
+        }
     }
 
     /**
@@ -64,7 +66,7 @@ object GoogleLoginManager {
     /**
      * 登出google
      */
-    fun signOutGoogle(listener: () -> Unit) {
+    private fun signOutGoogle(listener: () -> Unit) {
         mGoogleSignInClient?.signOut()?.addOnCompleteListener {
             Log.w(TAG, "Google logout!")
             listener.invoke()
@@ -76,28 +78,40 @@ object GoogleLoginManager {
     /**
      * 登陆结果
      */
-    fun googleLoginOnResult(intent: Intent?, success: (GoogleSignInAccountEntity?) -> Unit, failed: (Int, String) -> Unit) {
+    fun googleLoginOnResult(intent: Intent?, resultCallBack: (data: LoginResultEntity) -> Unit) {
         try {
             val signedInTask = GoogleSignIn.getSignedInAccountFromIntent(intent)
-            signedInTask.getResult(ApiException::class.java)?.apply {
+            signedInTask.getResult(ApiException::class.java)?.let {
                 Log.i(TAG, "登陆成功")
-                success(
-                    GoogleSignInAccountEntity(
-                        account = account,
-                        givenName = givenName,
-                        serverAuthCode = serverAuthCode,
-                        photoUrl = photoUrl,
-                        displayName = displayName,
-                        email = email,
-                        id = id,
-                        familyName = familyName,
-                        idToken = idToken
+                resultCallBack.invoke(
+                    LoginResultEntity(
+                        LoginResultEntity.CODE_SUCCESS,
+                        "google login success",
+                        LoginResultEntity.LOGIN_TYPE_GOOGLE,
+                        //token = signInAccount?.idToken,
+                        third_id = it.id,
+                        thirdCode = it.serverAuthCode,
+                        email = it.email,
+                        loginname = it.displayName,
+                        avatar = it.photoUrl?.toString()
                     )
                 )
-            } ?: success(null)
+            } ?: resultCallBack.invoke(
+                LoginResultEntity(
+                    -1,
+                    "google sdk callback is null",
+                    LoginResultEntity.LOGIN_TYPE_GOOGLE
+                )
+            )
         } catch (e: ApiException) {
             e.printStackTrace()
-            failed(e.statusCode, GoogleSignInStatusCodes.getStatusCodeString(e.statusCode))
+            resultCallBack.invoke(
+                LoginResultEntity(
+                    e.statusCode,
+                    "code=${e.statusCode} msg=${GoogleSignInStatusCodes.getStatusCodeString(e.statusCode)}",
+                    LoginResultEntity.LOGIN_TYPE_GOOGLE
+                )
+            )
         }
     }
 
@@ -124,10 +138,14 @@ object GoogleLoginManager {
     private fun showGooglePlayError(activity: Activity, code: Int) {
         GoogleApiAvailability.getInstance().makeGooglePlayServicesAvailable(activity)
         if (GoogleApiAvailability.getInstance().isUserResolvableError(code)) {
-            GoogleApiAvailability.getInstance().getErrorDialog(activity, code, REQUEST_CODE_ERROR_DIALOG)?.show()
+            GoogleApiAvailability.getInstance().getErrorDialog(activity, code, GlobalConstant.REQUEST_CODE_ERROR_DIALOG)?.show()
         } else {
             val tipMsg = GoogleApiAvailability.getInstance().getErrorString(code)
             Toast.makeText(activity, "Google Service Error: $tipMsg", Toast.LENGTH_LONG).show()
         }
+    }
+
+    fun onRelease() {
+        mGoogleSignInClient = null
     }
 }

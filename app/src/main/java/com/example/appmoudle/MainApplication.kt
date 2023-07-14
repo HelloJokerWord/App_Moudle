@@ -2,7 +2,9 @@ package com.example.appmoudle
 
 import android.util.Log
 import androidx.multidex.MultiDexApplication
-import com.example.appmoudle.startup.CommonStartup
+import com.example.appmoudle.startup.NetStartup
+import com.example.appmoudle.startup.ThirdLibStartup
+import com.example.appmoudle.startup.UIStartup
 import com.rousetime.android_startup.StartupListener
 import com.rousetime.android_startup.StartupManager
 import com.rousetime.android_startup.model.CostTimesModel
@@ -39,7 +41,9 @@ class MainApplication : MultiDexApplication() {
 
         StartupManager.Builder()
             .setConfig(config)
-            .addStartup(CommonStartup())
+            .addStartup(ThirdLibStartup())
+            .addStartup(UIStartup())
+            .addStartup(NetStartup())
             .build(this)
             .start()
             .await()

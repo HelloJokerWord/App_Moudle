@@ -1,0 +1,58 @@
+plugins {
+    id 'com.android.library'
+    id 'org.jetbrains.kotlin.android'
+    id 'kotlin-kapt'
+}
+
+android {
+    namespace 'com.libhttp'
+    compileSdk rootProject.compile_sdk_version
+    buildToolsVersion rootProject.build_tools_version
+
+    defaultConfig {
+        minSdk rootProject.min_sdk
+        targetSdk rootProject.target_sdk
+
+        flavorDimensions "channel"
+
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
+    }
+
+    kotlinOptions {
+        jvmTarget = '11'
+    }
+
+    productFlavors {
+        publish {
+            buildConfigField "Boolean", "isPublish", "true"
+        }
+
+        develop {
+            buildConfigField "Boolean", "isPublish", "false"
+        }
+    }
+}
+
+dependencies {
+
+    implementation(project(":LibCommon"))
+
+    api "com.github.liujingxing.rxhttp:rxhttp:$version_rxhttp"
+    kapt "com.github.liujingxing.rxhttp:rxhttp-compiler:$version_rxhttp"
+
+    api 'com.github.liujingxing.rxlife:rxlife-rxjava3:2.2.2' //管理RxJava3生命周期，页面销毁，关闭请求
+}
+
+/**
+ * 网络请求库需要添加
+ */
+kapt {
+    arguments {
+        //依赖了RxJava时，rxhttp_rxjava参数为必须，传入RxJava版本号
+        arg("rxhttp_rxjava", "$version_rxjava")
+    }
+}

@@ -19,7 +19,7 @@ import java.util.List;
 import cc.shinichi.library.view.subsampling.SubsamplingScaleImageView;
 
 /**
- * Default implementation of {@link cc.shinichi.library.view.subsampling.decoder.ImageDecoder}
+ * Default implementation of {@link ImageDecoder}
  * using Android's {@link BitmapFactory}, based on the Skia library. This
  * works well in most circumstances and has reasonable performance, however it has some problems
  * with grayscale, indexed and CMYK images.

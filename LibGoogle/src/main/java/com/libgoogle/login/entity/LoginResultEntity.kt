@@ -13,7 +13,14 @@ data class LoginResultEntity(
     val resultCode: Int,
     val resultMsg: String?,
     val loginType: Int,
-    val token: String? = null,
+    val third_token: String? = null,
+    val third_id: String? = null,
+    val thirdCode: String? = null,
+    val thirdSecret: String? = null,
+    val email: String? = null,
+    val loginname: String? = null,
+    val avatar: String? = null,
+    val password: String? = null,
 ) {
     companion object {
         const val CODE_CANCEL = 1
@@ -22,6 +29,7 @@ data class LoginResultEntity(
 
         const val LOGIN_TYPE_FACEBOOK = 1
         const val LOGIN_TYPE_GOOGLE = 2
-        const val LOGIN_TYPE_PHONE = 3
+        const val LOGIN_TYPE_EMAIL = 3
+        const val LOGIN_TYPE_TWITTER = 4
     }
 }

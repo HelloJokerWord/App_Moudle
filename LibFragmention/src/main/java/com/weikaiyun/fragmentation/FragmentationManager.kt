@@ -15,7 +15,7 @@ object FragmentationManager {
     fun init() {
         // 设置 栈视图 模式为 （默认）悬浮球模式   SHAKE: 摇一摇唤出  NONE：隐藏， 仅在Debug环境生效
         Fragmentation.builder()
-            .stackViewMode(Fragmentation.BUBBLE)
+            .stackViewMode(Fragmentation.NONE)
             .debug(BuildConfig.DEBUG)
             .animation(R.anim.anim_fade_in, R.anim.anim_fade_out, R.anim.anim_fade_in, R.anim.anim_fade_out) //设置默认动画
             .install()

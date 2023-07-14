@@ -6,6 +6,7 @@ import cc.shinichi.library.bean.ImageInfo
 
 /**
  * 图片浏览器管理器
+ *
  */
 object ImagePreviewManager {
 
@@ -21,7 +22,7 @@ object ImagePreviewManager {
      * @param imageUrls 批量图片链接
      * @param custom 自定义图片浏览器参数
      */
-    fun toView(context: Context?, imageUrls: MutableList<String>, position: Int, custom: ((ip: ImagePreview) -> Unit)? = null) {
+    fun toView(context: Context?, imageUrls: MutableList<String>, position: Int = 0, custom: ((ip: ImagePreview) -> Unit)? = null) {
         if (imageUrls.isEmpty()) return
         createDefaultPreview(context)?.apply {
             setImageList(imageUrls)
@@ -35,7 +36,7 @@ object ImagePreviewManager {
      * @param imageInfo 批量图片链接
      * @param custom 自定义图片浏览器参数
      */
-    fun toViewWithPreview(context: Context?, imageInfo: MutableList<ImageInfo>, position: Int, custom: ((ip: ImagePreview) -> Unit)? = null) {
+    fun toViewWithPreview(context: Context?, imageInfo: MutableList<ImageInfo>, position: Int = 0, custom: ((ip: ImagePreview) -> Unit)? = null) {
         createDefaultPreview(context)?.apply {
             setImageInfoList(imageInfo)
                 .setIndex(position)
@@ -48,7 +49,9 @@ object ImagePreviewManager {
         if (context == null) return null
         return ImagePreview.instance
             .setContext(context)
-            .setShowDownButton(false)
+            .setShowDownButton(true)
+            .setEnableDragClose(true)
+            .setShowCloseButton(true)
     }
 
 }

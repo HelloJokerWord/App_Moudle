@@ -10,4 +10,8 @@
     <string name="hc_net_error_retry">Refresh the page</string>
 
     <string name="hc_toast_try_again">系统繁忙[%1$s],请稍后重试.</string>
+
+    <string name="ma_tips_not_less_pic">At least %1$s pictures</string>
+    <string name="ma_tips_not_less_video">At least %1$s videos</string>
+    <string name="ma_tips_not_less_audio">At least %1$s audio</string>
 </resources>

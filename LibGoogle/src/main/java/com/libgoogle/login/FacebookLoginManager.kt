@@ -1,12 +1,15 @@
 package com.libgoogle.login
 
 import android.content.Intent
+import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
 import com.facebook.AccessToken
 import com.facebook.CallbackManager
 import com.facebook.FacebookCallback
 import com.facebook.FacebookException
+import com.facebook.GraphRequest
+import com.facebook.HttpMethod
 import com.facebook.login.LoginManager
 import com.facebook.login.LoginResult
 import com.libgoogle.login.entity.LoginResultEntity
@@ -25,8 +28,11 @@ object FacebookLoginManager {
     /**
      * 注册登陆
      */
-    fun initLogin(loginCallBack: (result: LoginResultEntity) -> Unit) {
-        callbackManager = CallbackManager.Factory.create()
+    fun initLogin() {
+        if (callbackManager == null) callbackManager = CallbackManager.Factory.create()
+    }
+
+    fun registerCallback(loginCallBack: (result: LoginResultEntity) -> Unit) {
         LoginManager.getInstance().registerCallback(callbackManager, object : FacebookCallback<LoginResult> {
             override fun onCancel() {
                 Log.w(TAG, "fb login cancel")
@@ -53,16 +59,34 @@ object FacebookLoginManager {
 
             override fun onSuccess(result: LoginResult) {
                 Log.i(TAG, "fb login success, result: ${result.accessToken.token}")
-                loginCallBack.invoke(
-                    LoginResultEntity(
-                        LoginResultEntity.CODE_SUCCESS,
-                        "login success",
-                        LoginResultEntity.LOGIN_TYPE_FACEBOOK,
-                        result.accessToken.token
-                    )
-                )
+                getFaceBookUserInfo(result.accessToken, result.accessToken.userId, loginCallBack)
             }
         })
+    }
+
+    private fun getFaceBookUserInfo(accessToken: AccessToken?, userId: String?, loginCallBack: (result: LoginResultEntity) -> Unit) {
+        val params = Bundle().apply { putString("fields", "picture,name,id,email,permissions") }
+        GraphRequest(accessToken, "/me", params, HttpMethod.GET, { response ->
+            val name = response.jsonObject?.optString("name")
+            val avatar = response.jsonObject?.getJSONObject("picture")?.getJSONObject("data")?.optString("url")
+            Log.i(TAG, "response=${response.jsonObject}")
+
+            loginCallBack.invoke(
+                LoginResultEntity(
+                    LoginResultEntity.CODE_SUCCESS,
+                    "fb login success",
+                    LoginResultEntity.LOGIN_TYPE_FACEBOOK,
+                    third_token = accessToken?.token,
+                    third_id = userId,
+                    loginname = name,
+                    avatar = avatar,
+                )
+            )
+        }).executeAsync()
+    }
+
+    fun unRegisterCallback() {
+        LoginManager.getInstance().unregisterCallback(callbackManager)
     }
 
     /**
@@ -76,7 +100,7 @@ object FacebookLoginManager {
     /**
      * 退出登陆
      */
-    fun loginOut() {
+    private fun loginOut() {
         Log.w(TAG, "loginOut")
         LoginManager.getInstance().logOut()
     }
@@ -89,18 +113,10 @@ object FacebookLoginManager {
         val isLoggedIn = accessToken != null && !accessToken.isExpired
         Log.w(TAG, "开始登陆 accessToken=$accessToken  会否已登陆过=$isLoggedIn")
         if (isLoggedIn) {
-            loginCallBack.invoke(
-                LoginResultEntity(
-                    LoginResultEntity.CODE_SUCCESS,
-                    "facebook login success",
-                    LoginResultEntity.LOGIN_TYPE_FACEBOOK,
-                    accessToken?.token
-                )
-            )
+            getFaceBookUserInfo(accessToken, accessToken?.userId, loginCallBack)
         } else {
-            fragment.activity?.let {
-                LoginManager.getInstance().logIn(it, null)
-            }
+            loginOut()
+            fragment.activity?.let { LoginManager.getInstance().logIn(it, null) }
         }
     }
 }

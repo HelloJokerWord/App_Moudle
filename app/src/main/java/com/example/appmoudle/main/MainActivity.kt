@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import com.blankj.utilcode.constant.PermissionConstants
 import com.blankj.utilcode.util.AppUtils
 import com.blankj.utilcode.util.KeyboardUtils
 import com.blankj.utilcode.util.LogUtils
@@ -14,13 +15,12 @@ import com.blankj.utilcode.util.ToastUtils
 import com.blankj.utilcode.util.Utils
 import com.example.appmoudle.R
 import com.example.appmoudle.base.BaseSupportActivity
-import com.example.appmoudle.config.EventKeyBoardChange
-import com.example.appmoudle.config.EventNetWorkChange
-import com.example.appmoudle.config.GlobalUserManager
 import com.example.appmoudle.databinding.ActivityMainBinding
 import com.example.appmoudle.dialog.CommonConfirmDialog
+import com.example.appmoudle.global.EventKeyBoardChange
+import com.example.appmoudle.global.EventNetWorkChange
+import com.example.appmoudle.global.GlobalUserManager
 import com.example.appmoudle.login.LoginF
-import com.example.appmoudle.manager.photo.PhotosSelectManager
 import com.lxj.xpopup.core.BasePopupView
 import com.third.libcommon.LiveEventManager
 import com.third.libcommon.PermissionManager
@@ -91,9 +91,6 @@ class MainActivity : BaseSupportActivity<ActivityMainBinding>() {
         //预加载资源
         initResDownload()
 
-        PhotosSelectManager.openAlbum(this) {
-
-        }
     }
 
     //APP活着的时候回来APP调该方法
@@ -131,7 +128,7 @@ class MainActivity : BaseSupportActivity<ActivityMainBinding>() {
      */
     private fun checkAppPermission() {
         // 版本大于6.0动态申请权限
-        PermissionManager.checkStoragePermission(this, {
+        PermissionManager.checkPermission(this, arrayOf(PermissionConstants.STORAGE), {
             loadRootFragment(R.id.flContainerView, if (GlobalUserManager.isLogin()) MainF.newInstance() else LoginF.newInstance())
         }, { _, _, _ -> showSettingDialog() })
     }

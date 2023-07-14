@@ -1,0 +1,37 @@
+plugins {
+    id 'com.android.library'
+    id 'org.jetbrains.kotlin.android'
+}
+
+android {
+    namespace 'com.luck.lib.camerax'
+    compileSdk rootProject.compile_sdk_version
+    buildToolsVersion rootProject.build_tools_version
+
+    defaultConfig {
+        minSdk rootProject.min_sdk
+        targetSdk rootProject.target_sdk
+
+        vectorDrawables.useSupportLibrary = true
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
+    }
+
+    kotlinOptions {
+        jvmTarget = '11'
+    }
+}
+
+dependencies {
+    implementation(project(":LibCommon"))
+
+    def camerax_version = "1.2.3"
+    api "androidx.camera:camera-core:${camerax_version}"
+    api "androidx.camera:camera-camera2:${camerax_version}"
+    api "androidx.camera:camera-view:${camerax_version}"
+    api "androidx.camera:camera-lifecycle:${camerax_version}"
+
+}

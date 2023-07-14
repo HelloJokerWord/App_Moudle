@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.scwang.smart.refresh.layout.SmartRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/srlHome"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:background="@color/white">
+
+    <com.libweight.refresh.CommonRefreshHeader
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/refresh_loading_parent_height" />
+
+    <FrameLayout
+        android:id="@+id/flContent"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvHome"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="16dp"
+            android:paddingBottom="30dp" />
+
+    </FrameLayout>
+
+    <com.libweight.refresh.CommonRefreshFooter
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/refresh_loading_parent_height" />
+
+</com.scwang.smart.refresh.layout.SmartRefreshLayout>

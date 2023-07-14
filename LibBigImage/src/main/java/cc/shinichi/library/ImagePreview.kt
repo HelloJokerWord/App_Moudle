@@ -110,11 +110,11 @@ class ImagePreview {
         private set
 
     @DrawableRes
-    var closeIconResId = R.drawable.ic_action_close
+    var closeIconResId = R.drawable.cc_ic_action_close
         private set
 
     @DrawableRes
-    var downIconResId = R.drawable.icon_download_new
+    var downIconResId = R.drawable.cc_ic_download
         private set
 
     // 加载失败时的占位图
@@ -131,7 +131,11 @@ class ImagePreview {
         private set
     var downloadClickListener: OnDownloadClickListener? = null
         private set
+    var downloadListener: OnDownloadListener? = null
+        private set
     var onOriginProgressListener: OnOriginProgressListener? = null
+        private set
+    var onPageFinishListener: OnPageFinishListener? = null
         private set
 
     // 自定义百分比布局layout id
@@ -225,15 +229,19 @@ class ImagePreview {
             LoadStrategy.Default -> {
                 true // 手动模式时，根据是否有原图缓存来决定是否显示查看原图按钮
             }
+
             LoadStrategy.NetworkAuto -> {
                 false // 强制隐藏查看原图按钮
             }
+
             LoadStrategy.AlwaysThumb -> {
                 false // 强制隐藏查看原图按钮
             }
+
             LoadStrategy.AlwaysOrigin -> {
                 false // 强制隐藏查看原图按钮
             }
+
             LoadStrategy.Auto -> {
                 true // 显示查看原图按钮
             }
@@ -268,7 +276,7 @@ class ImagePreview {
         return this
     }
 
-    @Deprecated("")
+    @Deprecated("不再支持，每张图片的缩放由本身的尺寸决定")
     fun setScaleLevel(min: Int, medium: Int, max: Int): ImagePreview {
         if (medium in (min + 1) until max && min > 0) {
             minScale = min.toFloat()
@@ -361,6 +369,16 @@ class ImagePreview {
         return this
     }
 
+    fun setDownloadListener(downloadListener: OnDownloadListener?): ImagePreview {
+        this.downloadListener = downloadListener
+        return this
+    }
+
+    fun setOnPageFinishListener(onPageFinishListener: OnPageFinishListener): ImagePreview {
+        this.onPageFinishListener = onPageFinishListener
+        return this
+    }
+
     private fun setOnOriginProgressListener(onOriginProgressListener: OnOriginProgressListener): ImagePreview {
         this.onOriginProgressListener = onOriginProgressListener
         return this
@@ -396,8 +414,8 @@ class ImagePreview {
         isEnableClickClose = true
         isShowIndicator = true
         isShowErrorToast = false
-        closeIconResId = R.drawable.ic_action_close
-        downIconResId = R.drawable.icon_download_new
+        closeIconResId = R.drawable.cc_ic_action_close
+        downIconResId = R.drawable.cc_ic_download
         errorPlaceHolder = R.drawable.load_failed
         loadStrategy = LoadStrategy.Default
         folderName = "Download"
@@ -414,8 +432,7 @@ class ImagePreview {
             Log.e("ImagePreview", "---忽略多次快速点击---")
             return
         }
-        val context = contextWeakReference.get()
-            ?: throw IllegalArgumentException("You must call 'setContext(Context context)' first!")
+        val context = contextWeakReference.get() ?: throw IllegalArgumentException("You must call 'setContext(Context context)' first!")
         require(context is Activity) { "context must be a Activity!" }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
             if (context.isFinishing || context.isDestroyed) {
@@ -432,6 +449,26 @@ class ImagePreview {
         require(index < imageInfoList.size) { "index out of range!" }
         lastClickTime = System.currentTimeMillis()
         ImagePreviewActivity.activityStart(context)
+    }
+
+    /**
+     * 主动关闭页面
+     */
+    fun finish() {
+        val context = contextWeakReference.get()
+        if (context !is Activity) {
+            return
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            if (context.isFinishing || context.isDestroyed) {
+                return
+            }
+        } else {
+            if (context.isFinishing) {
+                return
+            }
+        }
+        context.finish()
     }
 
     enum class LoadStrategy {

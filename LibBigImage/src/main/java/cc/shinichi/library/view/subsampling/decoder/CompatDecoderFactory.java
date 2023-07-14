@@ -21,7 +21,7 @@ public class CompatDecoderFactory<T> implements DecoderFactory<T> {
     /**
      * Construct a factory for the given class. This must have a default constructor.
      *
-     * @param clazz a class that implements {@link cc.shinichi.library.view.subsampling.decoder.ImageDecoder} or {@link cc.shinichi.library.view.subsampling.decoder.ImageRegionDecoder}.
+     * @param clazz a class that implements {@link ImageDecoder} or {@link ImageRegionDecoder}.
      */
     public CompatDecoderFactory(@NonNull Class<? extends T> clazz) {
         this(clazz, null);

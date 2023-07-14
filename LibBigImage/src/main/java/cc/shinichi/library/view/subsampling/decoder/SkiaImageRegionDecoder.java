@@ -27,7 +27,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 import cc.shinichi.library.view.subsampling.SubsamplingScaleImageView;
 
 /**
- * Default implementation of {@link cc.shinichi.library.view.subsampling.decoder.ImageRegionDecoder}
+ * Default implementation of {@link ImageRegionDecoder}
  * using Android's {@link BitmapRegionDecoder}, based on the Skia library. This
  * works well in most circumstances and has reasonable performance due to the cached decoder instance,
  * however it has some problems with grayscale, indexed and CMYK images.
@@ -39,12 +39,14 @@ import cc.shinichi.library.view.subsampling.SubsamplingScaleImageView;
  */
 public class SkiaImageRegionDecoder implements ImageRegionDecoder {
 
+    private BitmapRegionDecoder decoder;
+    private final ReadWriteLock decoderLock = new ReentrantReadWriteLock(true);
+
     private static final String FILE_PREFIX = "file://";
     private static final String ASSET_PREFIX = FILE_PREFIX + "/android_asset/";
     private static final String RESOURCE_PREFIX = ContentResolver.SCHEME_ANDROID_RESOURCE + "://";
-    private final ReadWriteLock decoderLock = new ReentrantReadWriteLock(true);
+
     private final Bitmap.Config bitmapConfig;
-    private BitmapRegionDecoder decoder;
 
     @Keep
     @SuppressWarnings("unused")

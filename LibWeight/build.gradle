@@ -1,0 +1,30 @@
+plugins {
+    id 'com.android.library'
+    id 'org.jetbrains.kotlin.android'
+}
+
+android {
+    namespace 'com.libweight'
+    compileSdk rootProject.compile_sdk_version
+    buildToolsVersion rootProject.build_tools_version
+
+    defaultConfig {
+        minSdk rootProject.min_sdk
+        targetSdk rootProject.target_sdk
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
+    }
+
+    kotlinOptions {
+        jvmTarget = '11'
+    }
+}
+
+dependencies {
+    //公共库
+    implementation(project(":LibCommon"))
+}
+

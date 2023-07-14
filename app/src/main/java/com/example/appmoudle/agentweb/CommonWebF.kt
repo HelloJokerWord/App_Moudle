@@ -6,7 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.webkit.WebView
 import com.example.appmoudle.base.BaseFragment
-import com.example.appmoudle.config.EventWeb
+import com.example.appmoudle.global.EventWeb
 import com.example.appmoudle.databinding.FCommonWebBinding
 import com.example.appmoudle.googlepay.GooglePayManager
 import com.third.libcommon.LiveEventManager

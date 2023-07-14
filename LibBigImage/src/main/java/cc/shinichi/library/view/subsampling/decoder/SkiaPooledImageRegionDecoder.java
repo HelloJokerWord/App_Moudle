@@ -40,7 +40,7 @@ import cc.shinichi.library.view.subsampling.SubsamplingScaleImageView;
 
 /**
  * <p>
- * An implementation of {@link cc.shinichi.library.view.subsampling.decoder.ImageRegionDecoder} using a pool of {@link BitmapRegionDecoder}s,
+ * An implementation of {@link ImageRegionDecoder} using a pool of {@link BitmapRegionDecoder}s,
  * to provide true parallel loading of tiles. This is only effective if parallel loading has been
  * enabled in the view by calling {@link SubsamplingScaleImageView#setExecutor(Executor)}
  * with a multi-threaded {@link Executor} instance.
@@ -59,18 +59,24 @@ import cc.shinichi.library.view.subsampling.SubsamplingScaleImageView;
 public class SkiaPooledImageRegionDecoder implements ImageRegionDecoder {
 
     private static final String TAG = SkiaPooledImageRegionDecoder.class.getSimpleName();
+
+    private static boolean debug = false;
+
+    private DecoderPool decoderPool = new DecoderPool();
+    private final ReadWriteLock decoderLock = new ReentrantReadWriteLock(true);
+
     private static final String FILE_PREFIX = "file://";
     private static final String ASSET_PREFIX = FILE_PREFIX + "/android_asset/";
     private static final String RESOURCE_PREFIX = ContentResolver.SCHEME_ANDROID_RESOURCE + "://";
-    private static boolean debug = false;
-    private final ReadWriteLock decoderLock = new ReentrantReadWriteLock(true);
+
     private final Bitmap.Config bitmapConfig;
-    private final Point imageDimensions = new Point(0, 0);
-    private final AtomicBoolean lazyInited = new AtomicBoolean(false);
-    private DecoderPool decoderPool = new DecoderPool();
+
     private Context context;
     private Uri uri;
+
     private long fileLength = Long.MAX_VALUE;
+    private final Point imageDimensions = new Point(0, 0);
+    private final AtomicBoolean lazyInited = new AtomicBoolean(false);
 
     @Keep
     @SuppressWarnings("unused")
@@ -92,7 +98,6 @@ public class SkiaPooledImageRegionDecoder implements ImageRegionDecoder {
 
     /**
      * Controls logging of debug messages. All instances are affected.
-     *
      * @param debug true to enable debug logging, false to disable.
      */
     @Keep
@@ -336,52 +341,6 @@ public class SkiaPooledImageRegionDecoder implements ImageRegionDecoder {
         return true;
     }
 
-    private int getNumberOfCores() {
-        if (Build.VERSION.SDK_INT >= 17) {
-            return Runtime.getRuntime().availableProcessors();
-        } else {
-            return getNumCoresOldPhones();
-        }
-    }
-
-    /**
-     * Gets the number of cores available in this device, across all processors.
-     * Requires: Ability to peruse the filesystem at "/sys/devices/system/cpu"
-     *
-     * @return The number of cores, or 1 if failed to get result
-     */
-    private int getNumCoresOldPhones() {
-        class CpuFilter implements FileFilter {
-            @Override
-            public boolean accept(File pathname) {
-                return Pattern.matches("cpu[0-9]+", pathname.getName());
-            }
-        }
-        try {
-            File dir = new File("/sys/devices/system/cpu/");
-            File[] files = dir.listFiles(new CpuFilter());
-            return files.length;
-        } catch (Exception e) {
-            return 1;
-        }
-    }
-
-    private boolean isLowMemory() {
-        ActivityManager activityManager = (ActivityManager) context.getSystemService(ACTIVITY_SERVICE);
-        if (activityManager != null) {
-            ActivityManager.MemoryInfo memoryInfo = new ActivityManager.MemoryInfo();
-            activityManager.getMemoryInfo(memoryInfo);
-            return memoryInfo.lowMemory;
-        } else {
-            return true;
-        }
-    }
-
-    private void debug(String message) {
-        if (debug) {
-            Log.d(TAG, message);
-        }
-    }
 
     /**
      * A simple pool of {@link BitmapRegionDecoder} instances, all loading from the same source.
@@ -468,6 +427,53 @@ public class SkiaPooledImageRegionDecoder implements ImageRegionDecoder {
             return false;
         }
 
+    }
+
+    private int getNumberOfCores() {
+        if (Build.VERSION.SDK_INT >= 17) {
+            return Runtime.getRuntime().availableProcessors();
+        } else {
+            return getNumCoresOldPhones();
+        }
+    }
+
+    /**
+     * Gets the number of cores available in this device, across all processors.
+     * Requires: Ability to peruse the filesystem at "/sys/devices/system/cpu"
+     *
+     * @return The number of cores, or 1 if failed to get result
+     */
+    private int getNumCoresOldPhones() {
+        class CpuFilter implements FileFilter {
+            @Override
+            public boolean accept(File pathname) {
+                return Pattern.matches("cpu[0-9]+", pathname.getName());
+            }
+        }
+        try {
+            File dir = new File("/sys/devices/system/cpu/");
+            File[] files = dir.listFiles(new CpuFilter());
+            return files.length;
+        } catch (Exception e) {
+            return 1;
+        }
+    }
+
+    private boolean isLowMemory() {
+        ActivityManager activityManager = (ActivityManager) context.getSystemService(ACTIVITY_SERVICE);
+        if (activityManager != null) {
+            ActivityManager.MemoryInfo memoryInfo = new ActivityManager.MemoryInfo();
+            activityManager.getMemoryInfo(memoryInfo);
+            return memoryInfo.lowMemory;
+        } else {
+            return true;
+        }
+    }
+
+    private void debug(String message) {
+        if (debug) {
+            Log.d(TAG, message);
+        }
     }
 
 }

@@ -1,7 +1,7 @@
 package com.third.libcommon.constant
 
-import com.blankj.utilcode.util.FileUtils
 import com.blankj.utilcode.util.PathUtils
+import java.io.File
 
 /**
  * Created on 2022/9/7.
@@ -23,12 +23,11 @@ object GlobalPath {
      */
     fun createMainDBPath() = "${PathUtils.getInternalAppDbsPath()}/objectbox/db_version_$DATA_BASE_VERSION"
 
-    /**
-     * 获取图片压缩路径
-     */
-    fun getImageCompressPath(): String {
-        if (!FileUtils.isFileExists(IMAGE_CACHE)) FileUtils.createOrExistsFile(IMAGE_CACHE)
-        return IMAGE_CACHE
+    fun getLubanTargetPath(): String {
+        val path = "$IMAGE_TEMP/Luban/image/"
+        val file = File(path)
+        file.mkdirs()
+        return path
     }
 
     /**
@@ -47,33 +46,23 @@ object GlobalPath {
     val LOG_PATH = "$ROOT_PATH/log"
 
     /**
-     * 图片压缩路径
-     */
-    val IMAGE_CACHE = "$ROOT_PATH/image/"
-
-    /**
      * 图片下载地址
      */
-    val IMAGE_DOWNLOAD = "$ROOT_PATH/image_download/"
+    val IMAGE_DOWNLOAD = "$ROOT_PATH/image_download"
 
     /**
-     * 本地生成录音存临时放位置
+     * 图片临时地址
      */
-    val RECORD_TEMP_FILE = "$ROOT_PATH/record/temp/"
-
-    /**
-     * 录音缓存位置
-     */
-    val WEAR_AVATAR_SVGA = "$ROOT_PATH/svga/"
+    private val IMAGE_TEMP = "$ROOT_PATH/image_temp"
 
     /**
      * 拍照输出
      */
-    val CAMERA_OUT_PUT = "$ROOT_PATH/take_photo/"
+    val CAMERA_OUT_PUT = "$ROOT_PATH/take_photo"
 
     /**
      * 裁剪输出
      */
-    val CROP_OUT_PUT = "$ROOT_PATH/crop/"
+    val CROP_OUT_PUT = "$ROOT_PATH/crop"
 
 }

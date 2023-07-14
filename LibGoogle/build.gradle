@@ -14,7 +14,6 @@ android {
 
         flavorDimensions "channel"
 
-        consumerProguardFiles "consumer-rules.pro"
     }
 
     compileOptions {
@@ -28,30 +27,29 @@ android {
 
     productFlavors {
         publish {
-            manifestPlaceholders.put("facebook_app_id", "1706959649685156")
-            manifestPlaceholders.put("facebook_client_token", "408f5c8309a1bbdd81401bf83fd99b2")
-            manifestPlaceholders.put("fb_login_protocol_scheme", "fb1706959649685156")
+            manifestPlaceholders.put("facebook_app_id", "251721190835919")
+            manifestPlaceholders.put("facebook_client_token", "b4744745d17adcb1f78ebe316a472579")
+            manifestPlaceholders.put("fb_login_protocol_scheme", "fb251721190835919")
 
-            manifestPlaceholders.put("google_login_key", "999659386790-ee90a0qubjgfcq61oktcf03ikmmvounk.apps.googleusercontent.com")
+            manifestPlaceholders.put("google_login_key", "1048983803067-gmj43gs1pbjjlu8jmbt1avui2h8s9je3.apps.googleusercontent.com")
 
-            manifestPlaceholders.put("appsflyer_key", "UH2XynacAKJGQLZznn4v6F")
+            manifestPlaceholders.put("twitter_login_key", "i7tkxo2XfZBgantsrGCR8QKu1")
+            manifestPlaceholders.put("twitter_login_secret", "u0KgEh5mKgiPmv3ryArZHC9oZ6AKtFlv62a3P5SnTggqlKt9KT")
+
+             manifestPlaceholders.put("appsflyer_key", "UH2XynacAKJGQLZznn4v6F")
         }
 
         develop {
-            manifestPlaceholders.put("facebook_app_id", "789801522054654")
-            manifestPlaceholders.put("facebook_client_token", "7f71bfee1faf04b3e97130fc52a8412d")
-            manifestPlaceholders.put("fb_login_protocol_scheme", "fb789801522054654")
+            manifestPlaceholders.put("facebook_app_id", "1000356280991620")
+            manifestPlaceholders.put("facebook_client_token", "8480c04c4e3bbde9ad14a11fdb73e108")
+            manifestPlaceholders.put("fb_login_protocol_scheme", "fb1000356280991620")
 
-            manifestPlaceholders.put("google_login_key", "999659386790-ee90a0qubjgfcq61oktcf03ikmmvounk.apps.googleusercontent.com")
+            manifestPlaceholders.put("google_login_key", "664252782203-vj2en22e3i8ghr2pdb7334ldt911leqs.apps.googleusercontent.com")
 
-            manifestPlaceholders.put("appsflyer_key", "Ump3w8FCxkMmFKf78Stp6e")
-        }
-    }
+            manifestPlaceholders.put("twitter_login_key", "i7tkxo2XfZBgantsrGCR8QKu1")
+            manifestPlaceholders.put("twitter_login_secret", "u0KgEh5mKgiPmv3ryArZHC9oZ6AKtFlv62a3P5SnTggqlKt9KT")
 
-    buildTypes {
-        release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+             manifestPlaceholders.put("appsflyer_key", "Ump3w8FCxkMmFKf78Stp6e")
         }
     }
 }
@@ -61,27 +59,30 @@ dependencies {
     implementation(project(":LibCommon"))
 
     //google登陆 https://developers.google.com/identity/sign-in/android/start-integrating?hl=zh-cn
-    implementation 'com.google.android.gms:play-services-auth:20.5.0'
+    implementation 'com.google.android.gms:play-services-auth:20.6.0'
 
     //google支付 https://developer.android.com/google/play/billing/release-notes?hl=zh-cn
-    implementation "com.android.billingclient:billing-ktx:6.0.0"
+    implementation "com.android.billingclient:billing-ktx:6.0.1"
 
     //google应用更新
-    implementation 'com.google.android.play:app-update-ktx:2.0.1'
+    implementation 'com.google.android.play:app-update-ktx:2.1.0'
 
     //Facebook login https://developers.facebook.com/docs/facebook-login
-    implementation 'com.facebook.android:facebook-login:15.1.0'
+    implementation 'com.facebook.android:facebook-android-sdk:16.1.2'
 
     //https://zh.dev.appsflyer.com/hc/docs/install-android-sdk
     //Get the latest version from https://mvnrepository.com/artifact/com.appsflyer/af-android-sdk
-    implementation 'com.appsflyer:af-android-sdk:6.9.2'
+    implementation 'com.appsflyer:af-android-sdk:6.11.0'
 
     //google play安装 https://developer.android.com/guide/playcore/in-app-updates/kotlin-java?hl=zh-cn#groovy
     implementation "com.android.installreferrer:installreferrer:2.2"
 
+    //twitter登陆 https://developer.twitter.com/en/docs/authentication/guides/log-in-with-twitter
+    implementation 'com.twitter.sdk.android:twitter:3.3.0'
+
     //firebase
-    implementation 'com.google.firebase:firebase-bom:32.0.0'
-    implementation "com.google.firebase:firebase-analytics-ktx:21.2.2"
+    implementation 'com.google.firebase:firebase-bom:32.1.1'
+    implementation "com.google.firebase:firebase-analytics-ktx:21.3.0"
     implementation('com.google.firebase:firebase-auth-ktx:22.0.0') {
         exclude module: "play-services-safetynet"
     }

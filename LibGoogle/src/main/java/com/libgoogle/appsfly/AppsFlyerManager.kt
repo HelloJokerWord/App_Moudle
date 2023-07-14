@@ -6,7 +6,6 @@ import android.util.Log
 import com.appsflyer.AppsFlyerConversionListener
 import com.appsflyer.AppsFlyerLib
 import com.blankj.utilcode.util.AppUtils
-import com.blankj.utilcode.util.DeviceUtils
 import com.blankj.utilcode.util.MetaDataUtils
 import com.blankj.utilcode.util.TimeUtils
 import com.blankj.utilcode.util.Utils

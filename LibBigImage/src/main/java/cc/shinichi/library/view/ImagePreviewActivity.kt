@@ -12,6 +12,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Message
 import android.text.TextUtils
+import android.util.Log
 import android.view.View
 import android.view.Window
 import android.view.WindowManager
@@ -22,7 +23,7 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.core.content.PermissionChecker
+import androidx.fragment.app.FragmentActivity
 import androidx.viewpager.widget.ViewPager.SimpleOnPageChangeListener
 import cc.shinichi.library.ImagePreview
 import cc.shinichi.library.R
@@ -30,16 +31,18 @@ import cc.shinichi.library.bean.ImageInfo
 import cc.shinichi.library.glide.FileTarget
 import cc.shinichi.library.glide.ImageLoader
 import cc.shinichi.library.glide.progress.OnProgressListener
-import cc.shinichi.library.glide.progress.ProgressManager.addListener
+import cc.shinichi.library.glide.progress.ProgressManager
+import cc.shinichi.library.tool.common.DeviceUtil
 import cc.shinichi.library.tool.common.HandlerHolder
 import cc.shinichi.library.tool.common.HttpUtil
 import cc.shinichi.library.tool.common.NetworkUtil
-import cc.shinichi.library.tool.image.DownloadPictureUtil.downloadPicture
+import cc.shinichi.library.tool.image.DownloadPictureUtil
 import cc.shinichi.library.tool.ui.ToastUtil
 import com.bumptech.glide.Glide
 import com.google.android.material.transition.platform.MaterialContainerTransform
 import com.google.android.material.transition.platform.MaterialContainerTransformSharedElementCallback
-import java.util.*
+import java.util.Locale
+
 
 /**
  * @author 工藤
@@ -47,7 +50,7 @@ import java.util.*
  */
 class ImagePreviewActivity : AppCompatActivity(), Handler.Callback, View.OnClickListener {
 
-    private lateinit var context: Activity
+    private lateinit var context: FragmentActivity
     private lateinit var handlerHolder: HandlerHolder
     private lateinit var imageInfoList: MutableList<ImageInfo>
     private lateinit var viewPager: HackyViewPager
@@ -82,26 +85,17 @@ class ImagePreviewActivity : AppCompatActivity(), Handler.Callback, View.OnClick
             window.requestFeature(Window.FEATURE_ACTIVITY_TRANSITIONS)
             findViewById<View>(android.R.id.content).transitionName = "shared_element_container"
             setEnterSharedElementCallback(MaterialContainerTransformSharedElementCallback())
-            window.sharedElementEnterTransition =
-                MaterialContainerTransform().addTarget(android.R.id.content).setDuration(300L)
-            window.sharedElementReturnTransition =
-                MaterialContainerTransform().addTarget(android.R.id.content).setDuration(250L)
+            window.sharedElementEnterTransition = MaterialContainerTransform().addTarget(android.R.id.content).setDuration(300L)
+            window.sharedElementReturnTransition = MaterialContainerTransform().addTarget(android.R.id.content).setDuration(250L)
         }
         super.onCreate(savedInstanceState)
 
         // R.layout.sh_layout_preview
         setContentView(ImagePreview.instance.previewLayoutResId)
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            val window = window
-            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
-            window.decorView.systemUiVisibility =
-                View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
-            window.statusBarColor = Color.TRANSPARENT
-        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
-        }
+        transparentStatusBar(this)
+        transparentNavBar(this)
+
         context = this
         handlerHolder = HandlerHolder(this)
         imageInfoList = ImagePreview.instance.getImageInfoList()
@@ -194,30 +188,26 @@ class ImagePreviewActivity : AppCompatActivity(), Handler.Callback, View.OnClick
         viewPager.addOnPageChangeListener(object : SimpleOnPageChangeListener() {
             override fun onPageSelected(position: Int) {
                 super.onPageSelected(position)
-                try {
-                    currentItem = position
-                    ImagePreview.instance.bigImagePageChangeListener?.onPageSelected(currentItem)
-                    currentItemOriginPathUrl = imageInfoList[currentItem].originUrl
-                    isShowOriginButton = ImagePreview.instance.isShowOriginButton(currentItem)
-                    if (isShowOriginButton) {
-                        // 检查缓存是否存在
-                        checkCache(currentItemOriginPathUrl)
-                    } else {
-                        gone()
-                    }
-                    // 更新进度指示器
-                    tvIndicator.text = String.format(
-                        getString(R.string.indicator),
-                        (currentItem + 1).toString(),
-                        (imageInfoList.size).toString()
-                    )
-                    // 如果是自定义百分比进度view，每次切换都先隐藏，并重置百分比
-                    if (isUserCustomProgressView) {
-                        fmCenterProgressContainer.visibility = View.GONE
-                        lastProgress = 0
-                    }
-                } catch (e: Exception) {
-                    e.printStackTrace()
+                currentItem = position
+                ImagePreview.instance.bigImagePageChangeListener?.onPageSelected(currentItem)
+                currentItemOriginPathUrl = imageInfoList[currentItem].originUrl
+                isShowOriginButton = ImagePreview.instance.isShowOriginButton(currentItem)
+                if (isShowOriginButton) {
+                    // 检查缓存是否存在
+                    checkCache(currentItemOriginPathUrl)
+                } else {
+                    gone()
+                }
+                // 更新进度指示器
+                tvIndicator.text = String.format(
+                    getString(R.string.indicator),
+                    (currentItem + 1).toString(),
+                    (imageInfoList.size).toString()
+                )
+                // 如果是自定义百分比进度view，每次切换都先隐藏，并重置百分比
+                if (isUserCustomProgressView) {
+                    fmCenterProgressContainer.visibility = View.GONE
+                    lastProgress = 0
                 }
             }
 
@@ -241,7 +231,7 @@ class ImagePreviewActivity : AppCompatActivity(), Handler.Callback, View.OnClick
      * 下载当前图片到SD卡
      */
     private fun downloadCurrentImg() {
-        downloadPicture(context.applicationContext, currentItemOriginPathUrl)
+        DownloadPictureUtil.downloadPicture(context, currentItem, currentItemOriginPathUrl)
     }
 
     override fun onBackPressed() {
@@ -255,6 +245,7 @@ class ImagePreviewActivity : AppCompatActivity(), Handler.Callback, View.OnClick
     override fun finish() {
         super.finish()
         overridePendingTransition(R.anim.fade_in, R.anim.fade_out)
+        ImagePreview.instance.onPageFinishListener?.onFinish(this)
         ImagePreview.instance.reset()
         imagePreviewAdapter?.closePage()
     }
@@ -262,7 +253,7 @@ class ImagePreviewActivity : AppCompatActivity(), Handler.Callback, View.OnClick
     private fun convertPercentToBlackAlphaColor(percent: Float): Int {
         val realPercent = 1f.coerceAtMost(0f.coerceAtLeast(percent))
         val intAlpha = (realPercent * 255).toInt()
-        val stringAlpha = Integer.toHexString(intAlpha).lowercase(Locale.CHINA)
+        val stringAlpha = Integer.toHexString(intAlpha).toLowerCase(Locale.CHINA)
         val color = "#" + (if (stringAlpha.length < 2) "0" else "") + stringAlpha + "000000"
         return Color.parseColor(color)
     }
@@ -403,45 +394,51 @@ class ImagePreviewActivity : AppCompatActivity(), Handler.Callback, View.OnClick
     }
 
     private fun checkAndDownload() {
-        // 检查权限
-        if (ContextCompat.checkSelfPermission(
-                context,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE
-            ) != PackageManager.PERMISSION_GRANTED
-        ) {
-            if (ActivityCompat.shouldShowRequestPermissionRationale(
-                    this@ImagePreviewActivity,
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE
-                )
-            ) {
-                // 拒绝权限
-                ToastUtil.instance.showShort(context, getString(R.string.toast_deny_permission_save_failed))
+        if (DeviceUtil.isHarmonyOs()) {
+            val harmonyVersion = DeviceUtil.getHarmonyVersionCode()
+            Log.d("checkAndDownload", "是鸿蒙系统, harmonyVersion:$harmonyVersion")
+            if (harmonyVersion < 6) {
+                if (ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                    ActivityCompat.requestPermissions(context, arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE), 1)
+                } else {
+                    // 下载当前图片
+                    downloadCurrentImg()
+                }
             } else {
-                //申请权限
-                ActivityCompat.requestPermissions(
-                    this@ImagePreviewActivity,
-                    arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
-                    1
-                )
+                // 下载当前图片
+                downloadCurrentImg()
             }
         } else {
-            // 下载当前图片
-            downloadCurrentImg()
+            Log.d("checkAndDownload", "不是鸿蒙系统")
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+                if (ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                    ActivityCompat.requestPermissions(context, arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE), 1)
+                } else {
+                    // 下载当前图片
+                    downloadCurrentImg()
+                }
+            } else {
+                // 下载当前图片
+                downloadCurrentImg()
+            }
         }
     }
 
     override fun onRequestPermissionsResult(
-        requestCode: Int, permissions: Array<String>,
+        requestCode: Int,
+        permissions: Array<out String>,
         grantResults: IntArray
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == 1) {
-            for (i in permissions.indices) {
-                if (grantResults[i] == PermissionChecker.PERMISSION_GRANTED) {
-                    downloadCurrentImg()
-                } else {
-                    ToastUtil.instance.showShort(context, getString(R.string.toast_deny_permission_save_failed))
-                }
+            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // 下载当前图片
+                downloadCurrentImg()
+            } else {
+                ToastUtil.instance.showShort(
+                    context,
+                    getString(R.string.toast_deny_permission_save_failed)
+                )
             }
         }
     }
@@ -455,7 +452,7 @@ class ImagePreviewActivity : AppCompatActivity(), Handler.Callback, View.OnClick
     }
 
     private fun loadOriginImage(path: String?) {
-        addListener(path, object : OnProgressListener {
+        ProgressManager.addListener(path, object : OnProgressListener {
             override fun onProgress(
                 url: String?,
                 isComplete: Boolean,
@@ -487,6 +484,47 @@ class ImagePreviewActivity : AppCompatActivity(), Handler.Callback, View.OnClick
         })
         Glide.with(context).downloadOnly().load(path).into(object : FileTarget() {
         })
+    }
+
+    private fun transparentStatusBar(activity: Activity) {
+        transparentStatusBar(activity.window)
+    }
+
+    private fun transparentStatusBar(window: Window) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) return
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
+            val option = View.SYSTEM_UI_FLAG_LAYOUT_STABLE or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+            val vis = window.decorView.systemUiVisibility
+            window.decorView.systemUiVisibility = option or vis
+            window.statusBarColor = Color.TRANSPARENT
+        } else {
+            window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
+        }
+    }
+
+    private fun transparentNavBar(activity: Activity) {
+        transparentNavBar(activity.window)
+    }
+
+    private fun transparentNavBar(window: Window) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) return
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            window.isNavigationBarContrastEnforced = false
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            window.navigationBarColor = Color.TRANSPARENT
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            if (window.attributes.flags and WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION == 0) {
+                window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION)
+            }
+        }
+        val decorView = window.decorView
+        val vis = decorView.systemUiVisibility
+        val option =
+            View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+        decorView.systemUiVisibility = vis or option
     }
 
     companion object {

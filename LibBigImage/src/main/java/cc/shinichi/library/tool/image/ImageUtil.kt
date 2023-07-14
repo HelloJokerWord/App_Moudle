@@ -1,17 +1,23 @@
 package cc.shinichi.library.tool.image
 
+import android.content.ContentResolver
+import android.content.ContentValues
 import android.content.Context
 import android.content.res.Configuration
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Matrix
+import android.net.Uri
+import android.os.Build
+import android.provider.MediaStore
 import android.text.TextUtils
 import android.util.Log
+import androidx.annotation.RequiresApi
 import androidx.exifinterface.media.ExifInterface
-import cc.shinichi.library.tool.common.Print.d
 import cc.shinichi.library.tool.ui.PhoneUtil
 import java.io.*
 import java.util.*
+import kotlin.math.max
 
 /**
  * @author 工藤
@@ -22,6 +28,16 @@ import java.util.*
  */
 object ImageUtil {
     private const val TAG = "ImageUtil"
+
+    @RequiresApi(Build.VERSION_CODES.Q)
+    fun Uri.refresh(
+        resolver: ContentResolver,
+    ) {
+        val imageValues = ContentValues()
+        // Android Q添加了IS_PENDING状态，为0时其他应用才可见
+        imageValues.put(MediaStore.Images.Media.IS_PENDING, 0)
+        resolver.update(this, imageValues, null, null)
+    }
 
     fun getBitmapDegree(path: String): Int {
         var degree = 0
@@ -130,11 +146,11 @@ object ImageUtil {
         } else intArrayOf(srcWidth, srcHeight)
     }
 
-    fun isTablet(context: Context): Boolean {
+    private fun isTablet(context: Context): Boolean {
         return context.resources.configuration.screenLayout and Configuration.SCREENLAYOUT_SIZE_MASK >= Configuration.SCREENLAYOUT_SIZE_LARGE
     }
 
-    fun isLandscape(context: Context): Boolean {
+    private fun isLandscape(context: Context): Boolean {
         val phoneRatio = PhoneUtil.getPhoneRatio(context.applicationContext)
         return phoneRatio <= 1f
     }
@@ -148,35 +164,61 @@ object ImageUtil {
         val w = wh[0].toFloat()
         val h = wh[1].toFloat()
         val imageRatio = h / w
-        val phoneRatio = PhoneUtil.getPhoneRatio(context.applicationContext) + 0.1f
-        val isLongImage = w > 0 && h > 0 && h > w && imageRatio >= phoneRatio
-        d(TAG, "isLongImage = $isLongImage")
+        val phoneRatio = PhoneUtil.getPhoneRatio(context)
+        val isLongImage = h > w && imageRatio > phoneRatio
+        Log.d(TAG, "isLongImage = $isLongImage")
         return isLongImage
     }
 
-    fun isWideImage(context: Context?, imagePath: String): Boolean {
+    fun isWideImage(imagePath: String): Boolean {
         val wh = getWidthHeight(imagePath)
         val w = wh[0].toFloat()
         val h = wh[1].toFloat()
         val imageRatio = w / h
-        // float phoneRatio = PhoneUtil.getPhoneRatio(context.getApplicationContext()) + 0.1F;
-        val isWideImage = w > 0 && h > 0 && w > h && imageRatio >= 2
-        d(TAG, "isWideImage = $isWideImage")
+        val isWideImage = w > h && imageRatio >= 2
+        Log.d(TAG, "isWideImage = $isWideImage")
         return isWideImage
     }
 
-    fun isSmallImage(context: Context, imagePath: String): Boolean {
+    fun getImageMaxZoomScale(context: Context, imagePath: String): Float {
         val wh = getWidthHeight(imagePath)
-        val isSmallImage = wh[0] < PhoneUtil.getPhoneWid(context.applicationContext)
-        d(TAG, "isSmallImage = $isSmallImage")
-        return isSmallImage
+        val imageWid = wh[0].toFloat()
+        val imageHei = wh[1].toFloat()
+        val phoneHei = PhoneUtil.getPhoneHei(context.applicationContext).toFloat()
+        if (imageWid >= 2560) {
+            return phoneHei * 4f / imageHei
+        }
+        return phoneHei * 2f / imageHei
+    }
+
+    fun getImageDoubleScale(context: Context, imagePath: String): Float {
+        val wh = getWidthHeight(imagePath)
+        val imageHei = wh[1].toFloat()
+        val phoneHei = PhoneUtil.getPhoneHei(context.applicationContext).toFloat()
+        return phoneHei / imageHei
+    }
+
+    fun getLongImageMaxZoomScale(context: Context, imagePath: String): Float {
+        val wh = getWidthHeight(imagePath)
+        val imageWid = wh[0].toFloat()
+        val imageHei = wh[1].toFloat()
+        val phoneWid = PhoneUtil.getPhoneWid(context.applicationContext).toFloat()
+        return max(imageHei / imageWid, phoneWid * 2f / imageWid)
     }
 
     fun getLongImageDoubleZoomScale(context: Context, imagePath: String): Float {
         val wh = getWidthHeight(imagePath)
+        val imageWid = wh[0].toDouble()
+        val phoneWid = PhoneUtil.getPhoneWid(context.applicationContext).toDouble()
+        return (phoneWid / imageWid).toFloat()
+    }
+
+    fun getWideImageMaxZoomScale(context: Context, imagePath: String): Float {
+        val wh = getWidthHeight(imagePath)
         val imageWid = wh[0].toFloat()
-        val phoneWid = PhoneUtil.getPhoneWid(context.applicationContext).toFloat()
-        return phoneWid / imageWid
+        val imageHei = wh[1].toFloat()
+        val phoneHei = PhoneUtil.getPhoneHei(context.applicationContext).toFloat()
+        return max(imageWid / imageHei, phoneHei * 2f / imageHei)
     }
 
     fun getWideImageDoubleScale(context: Context, imagePath: String): Float {
@@ -184,20 +226,6 @@ object ImageUtil {
         val imageHei = wh[1].toFloat()
         val phoneHei = PhoneUtil.getPhoneHei(context.applicationContext).toFloat()
         return phoneHei / imageHei
-    }
-
-    fun getSmallImageMinScale(context: Context, imagePath: String): Float {
-        val wh = getWidthHeight(imagePath)
-        val imageWid = wh[0].toFloat()
-        val phoneWid = PhoneUtil.getPhoneWid(context.applicationContext).toFloat()
-        return phoneWid / imageWid
-    }
-
-    fun getSmallImageMaxScale(context: Context, imagePath: String): Float {
-        val wh = getWidthHeight(imagePath)
-        val imageWid = wh[0].toFloat()
-        val phoneWid = PhoneUtil.getPhoneWid(context.applicationContext).toFloat()
-        return phoneWid * 2 / imageWid
     }
 
     fun getImageBitmap(srcPath: String?, degree: Int): Bitmap? {
@@ -264,14 +292,14 @@ object ImageUtil {
         options.inJustDecodeBounds = true
         BitmapFactory.decodeFile(path, options)
         var type = options.outMimeType
-        Log.d(TAG, "getImageTypeWithMime: type1 = $type")
+        Log.d(TAG, "getImageTypeWithMime: path = $path, type1 = $type")
         // ”image/png”、”image/jpeg”、”image/gif”
         type = if (TextUtils.isEmpty(type)) {
             ""
         } else {
             type.substring(6)
         }
-        Log.d(TAG, "getImageTypeWithMime: type2 = $type")
+        Log.d(TAG, "getImageTypeWithMime: path = $path, type2 = $type")
         return type
     }
 
@@ -300,36 +328,50 @@ object ImageUtil {
     }
 
     fun isAnimImageWithMime(url: String, path: String): Boolean {
-        return "gif".equals(getImageTypeWithMime(path), ignoreCase = true) || url.lowercase(Locale.CHINA).endsWith("gif")
+        return "gif".equals(getImageTypeWithMime(path), ignoreCase = true) || url.toLowerCase(Locale.CHINA).endsWith("gif")
                 || isAnimWebp(url, path)
     }
 
     fun isPngImageWithMime(url: String, path: String): Boolean {
-        return "png".equals(getImageTypeWithMime(path), ignoreCase = true) || url.lowercase(Locale.CHINA).endsWith("png")
+        return "png".equals(getImageTypeWithMime(path), ignoreCase = true) || url.toLowerCase(Locale.CHINA).endsWith("png")
     }
 
     fun isJpegImageWithMime(url: String, path: String): Boolean {
         return ("jpeg".equals(getImageTypeWithMime(path), ignoreCase = true) || "jpg".equals(getImageTypeWithMime(path), ignoreCase = true)
-                || url.lowercase(Locale.CHINA).endsWith("jpeg") || url.lowercase(Locale.CHINA).endsWith("jpg"))
+                || url.toLowerCase(Locale.CHINA).endsWith("jpeg") || url.toLowerCase(Locale.CHINA).endsWith("jpg"))
     }
 
     fun isBmpImageWithMime(url: String, path: String): Boolean {
-        return "bmp".equals(getImageTypeWithMime(path), ignoreCase = true) || url.lowercase(Locale.CHINA).endsWith("bmp")
+        return "bmp".equals(getImageTypeWithMime(path), ignoreCase = true) || url.toLowerCase(Locale.CHINA).endsWith("bmp")
     }
 
     fun isWebpImageWithMime(url: String, path: String): Boolean {
-        return "webp".equals(getImageTypeWithMime(path), ignoreCase = true) || url.lowercase(Locale.CHINA).endsWith("webp")
+        return "webp".equals(getImageTypeWithMime(path), ignoreCase = true) || url.toLowerCase(Locale.CHINA).endsWith("webp")
     }
 
     fun isHeifImageWithMime(url: String, path: String): Boolean {
         return "heif".equals(getImageTypeWithMime(path), ignoreCase = true)
-                || url.lowercase(Locale.CHINA).endsWith("heif") || url.lowercase(Locale.CHINA).endsWith("heic")
+                || url.toLowerCase(Locale.CHINA).endsWith("heif") || url.toLowerCase(Locale.CHINA).endsWith("heic")
     }
 
     fun isStaticImage(url: String, path: String): Boolean {
-        return isJpegImageWithMime(url, path)// jpeg
-                || isPngImageWithMime(url, path)// png
-                || isBmpImageWithMime(url, path)// bmp
-                || !isAnimImageWithMime(url, path)// 不是动图(不是webp动图、gif动图)
+        val isWebpImageWithMime = isWebpImageWithMime(url, path)
+        Log.d(TAG, "isStaticImage: isWebpImageWithMime = $isWebpImageWithMime")
+        if (isWebpImageWithMime) {
+            val animWebp = isAnimWebp(url, path)
+            Log.d(TAG, "isStaticImage: animWebp = $animWebp")
+            return !animWebp
+        }
+        val jpegImageWithMime = isJpegImageWithMime(url, path)
+        Log.d(TAG, "isStaticImage: jpegImageWithMime = $jpegImageWithMime")
+        val pngImageWithMime = isPngImageWithMime(url, path)
+        Log.d(TAG, "isStaticImage: pngImageWithMime = $pngImageWithMime")
+        val bmpImageWithMime = isBmpImageWithMime(url, path)
+        Log.d(TAG, "isStaticImage: bmpImageWithMime = $bmpImageWithMime")
+        val heifImageWithMime = isHeifImageWithMime(url, path)
+        Log.d(TAG, "isStaticImage: heifImageWithMime = $heifImageWithMime")
+        val animImageWithMime = isAnimImageWithMime(url, path)
+        Log.d(TAG, "isStaticImage: animImageWithMime = $animImageWithMime")
+        return (jpegImageWithMime || pngImageWithMime || bmpImageWithMime || heifImageWithMime) && !animImageWithMime
     }
 }
